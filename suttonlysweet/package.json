@@ -6,7 +6,7 @@
     "dev": "netlify dev"
   },
   "dependencies": {
-    "squareup": "^33.0.0",
+    "squareup": "^32.0.0",
     "resend": "^3.2.0"
   },
   "engines": {
