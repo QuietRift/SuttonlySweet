@@ -2,7 +2,7 @@
 // Fetches live menu items from Square Catalog API
 // Called by order.html on page load to populate the dropdown
 
-const { Client, Environment } = require("squareup");
+const { Client, Environment } = require("square");
 
 exports.handler = async () => {
   try {
