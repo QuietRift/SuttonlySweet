@@ -4,7 +4,7 @@
 // 2. Creates a Square Invoice
 // 3. Sends the invoice directly to the customer's email
 
-const { Client, Environment } = require("squareup");
+const { Client, Environment } = require("square");
 const { Resend } = require("resend");
 
 exports.handler = async (event) => {
