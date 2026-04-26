@@ -63,7 +63,7 @@ exports.handler = async (event) => {
         : `<p><strong>Type:</strong> Pickup</p>`;
 
     await resend.emails.send({
-      from: "Suttonly Sweet Orders <orders@suttonlysweet.com>",
+      from: "Suttonly Sweet Orders <onboarding@resend.dev>",
       to: process.env.OWNER_EMAIL,
       subject: `🎂 New Order Request ${orderId} — ${firstName} ${lastName}`,
       html: `
