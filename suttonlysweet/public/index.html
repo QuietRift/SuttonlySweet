@@ -752,7 +752,7 @@
 <body>
 
 <!-- CART SIDEBAR -->
-<div id="cart-overlay" onclick="toggleCart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:300;backdrop-filter:blur(4px);"></div>
+<div id="cart-overlay" onclick="closeCart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:300;backdrop-filter:blur(4px);"></div>
 <div id="cart-drawer" style="position:fixed;top:0;right:-420px;width:400px;max-width:95vw;height:100vh;background:white;z-index:301;transition:right 0.3s ease;box-shadow:-8px 0 40px rgba(0,0,0,0.15);display:flex;flex-direction:column;">
   <div style="padding:28px 28px 20px;border-bottom:1px solid rgba(232,23,122,0.12);display:flex;align-items:center;justify-content:space-between;">
     <div>
@@ -779,7 +779,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">Suttonly Sweet</a>
+  <a href="/" class="nav-logo">Suttonly Sweet</a>
   <ul class="nav-links">
     <li><a href="#menu">Menu</a></li>
     <li><a href="#about">Our Story</a></li>
@@ -994,14 +994,14 @@
       <p>Detroit's sweetest bakery since 1989. Everything made fresh, every single day — because shortcuts have no place in good baking.</p>
       <!-- SOCIAL ICONS — update hrefs with your actual URLs -->
       <div style="display:flex;gap:12px;margin-top:20px;">
-        <a href="https://www.instagram.com/lovesuttonlysweet" target="_blank" rel="noopener"
+        <a href="https://www.instagram.com/YOUR_INSTAGRAM_HANDLE" target="_blank" rel="noopener"
            style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;transition:background 0.2s;text-decoration:none;"
            onmouseover="this.style.background='#E8177A'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
           </svg>
         </a>
-        <a href="https://www.facebook.com/SuttonlySweet" target="_blank" rel="noopener"
+        <a href="https://www.facebook.com/YOUR_FACEBOOK_HANDLE" target="_blank" rel="noopener"
            style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;transition:background 0.2s;text-decoration:none;"
            onmouseover="this.style.background='#1877F2'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
@@ -1034,8 +1034,8 @@
       <ul>
         <li><a href="#about">Detroit, MI</a></li>
         <li><a href="#contact">Hours & Location</a></li>
-        <li><a href="https://www.instagram.com/lovesuttonlysweet" target="_blank">Instagram</a></li>
-        <li><a href="https://www.facebook.com/SuttonlySweet" target="_blank">Facebook</a></li>
+        <li><a href="https://www.instagram.com/YOUR_INSTAGRAM_HANDLE" target="_blank">Instagram</a></li>
+        <li><a href="https://www.facebook.com/YOUR_FACEBOOK_HANDLE" target="_blank">Facebook</a></li>
         <li><a href="/order.html">Place an Order</a></li>
       </ul>
     </div>
@@ -1049,12 +1049,19 @@
   // ── CART ─────────────────────────────────────────────
   let cart = [];
 
+  function openCart() {
+    document.getElementById('cart-drawer').style.right = '0px';
+    document.getElementById('cart-overlay').style.display = 'block';
+  }
+
+  function closeCart() {
+    document.getElementById('cart-drawer').style.right = '-420px';
+    document.getElementById('cart-overlay').style.display = 'none';
+  }
+
   function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
-    const overlay = document.getElementById('cart-overlay');
-    const isOpen = drawer.style.right === '0px';
-    drawer.style.right = isOpen ? '-420px' : '0px';
-    overlay.style.display = isOpen ? 'none' : 'block';
+    drawer.style.right === '0px' ? closeCart() : openCart();
   }
 
   function addToCart(name, price) {
@@ -1065,9 +1072,7 @@
       cart.push({ name, price, qty: 1 });
     }
     renderCart();
-    // Open cart drawer
-    document.getElementById('cart-drawer').style.right = '0px';
-    document.getElementById('cart-overlay').style.display = 'block';
+    openCart();
   }
 
   function removeFromCart(name) {
@@ -1085,7 +1090,6 @@
 
   function renderCart() {
     const itemsEl = document.getElementById('cart-items');
-    const emptyEl = document.getElementById('cart-empty');
     const footerEl = document.getElementById('cart-footer');
     const countEl = document.getElementById('cart-count');
     const totalEl = document.getElementById('cart-total');
@@ -1093,78 +1097,40 @@
     const totalItems = cart.reduce((s, i) => s + i.qty, 0);
     const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-    // Update count badge
-    if (totalItems > 0) {
-      countEl.textContent = totalItems;
-      countEl.style.display = 'inline-flex';
-    } else {
-      countEl.style.display = 'none';
-    }
-
+    countEl.textContent = totalItems;
+    countEl.style.display = totalItems > 0 ? 'inline-flex' : 'none';
     totalEl.textContent = `$${totalPrice.toFixed(2)}`;
+    footerEl.style.display = cart.length > 0 ? 'block' : 'none';
 
     if (cart.length === 0) {
-      emptyEl.style.display = 'block';
-      footerEl.style.display = 'none';
-      itemsEl.innerHTML = '';
-      itemsEl.appendChild(emptyEl);
+      itemsEl.innerHTML = `
+        <div style="text-align:center;padding:60px 20px;color:#666;">
+          <div style="font-size:3rem;margin-bottom:12px;">🛒</div>
+          <p style="font-size:0.875rem;">Your cart is empty.<br>Add items from the menu below.</p>
+        </div>`;
       return;
     }
 
-    emptyEl.style.display = 'none';
-    footerEl.style.display = 'block';
-
     itemsEl.innerHTML = cart.map(item => `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(232,23,122,0.08);">
-        <div style="flex:1;">
+        <div style="flex:1;padding-right:12px;">
           <div style="font-size:0.875rem;font-weight:600;color:#1a1a1a;">${item.name}</div>
           <div style="font-size:0.78rem;color:#666;margin-top:2px;">$${item.price.toFixed(2)} each</div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="display:flex;align-items:center;gap:8px;background:#fff5fa;border:1px solid rgba(232,23,122,0.15);border-radius:8px;padding:4px 10px;">
-            <button onclick="changeCartQty('${item.name}', -1)" style="border:none;background:none;color:#E8177A;font-size:1rem;cursor:pointer;font-weight:700;line-height:1;">−</button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="display:flex;align-items:center;gap:6px;background:#fff5fa;border:1px solid rgba(232,23,122,0.15);border-radius:8px;padding:4px 8px;">
+            <button onclick="changeCartQty('${item.name.replace(/'/g,"\\'")}', -1)" style="border:none;background:none;color:#E8177A;font-size:1rem;cursor:pointer;font-weight:700;line-height:1;padding:0 2px;">−</button>
             <span style="font-size:0.85rem;font-weight:700;min-width:16px;text-align:center;">${item.qty}</span>
-            <button onclick="changeCartQty('${item.name}', 1)" style="border:none;background:none;color:#E8177A;font-size:1rem;cursor:pointer;font-weight:700;line-height:1;">+</button>
+            <button onclick="changeCartQty('${item.name.replace(/'/g,"\\'")}', 1)" style="border:none;background:none;color:#E8177A;font-size:1rem;cursor:pointer;font-weight:700;line-height:1;padding:0 2px;">+</button>
           </div>
           <div style="font-size:0.9rem;font-weight:700;color:#E8177A;min-width:44px;text-align:right;">$${(item.price * item.qty).toFixed(2)}</div>
-          <button onclick="removeFromCart('${item.name}')" style="border:none;background:none;color:#ccc;cursor:pointer;font-size:1rem;padding:4px;">✕</button>
+          <button onclick="removeFromCart('${item.name.replace(/'/g,"\\'")}') " style="border:none;background:none;color:#ccc;cursor:pointer;font-size:1rem;padding:4px;">✕</button>
         </div>
       </div>
     `).join('');
 
-    // Store cart in sessionStorage so order page can read it
     sessionStorage.setItem('ss_cart', JSON.stringify(cart));
   }
-
-  // ── GOOGLE REVIEWS ──────────────────────────────────
-  // To enable live Google reviews:
-  // 1. Get a Google Places API key from console.cloud.google.com
-  // 2. Find your Place ID at developers.google.com/maps/documentation/places/web-service/place-id
-  // 3. Add GOOGLE_PLACES_API_KEY to Netlify env vars
-  // 4. Uncomment the fetch below and add your Place ID
-  //
-  // async function loadGoogleReviews() {
-  //   const res = await fetch('/api/get-reviews');
-  //   const { reviews } = await res.json();
-  //   if (!reviews?.length) return;
-  //   const grid = document.getElementById('reviews-grid');
-  //   grid.innerHTML = reviews.slice(0, 3).map(r => `
-  //     <div class="review-card">
-  //       <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-  //       <p>"${r.text}"</p>
-  //       <div class="reviewer">
-  //         <div class="reviewer-avatar" style="background:#fde8f2;font-size:0.8rem;font-weight:700;color:#E8177A;">
-  //           ${r.author_name.charAt(0)}
-  //         </div>
-  //         <div>
-  //           <div class="reviewer-name">${r.author_name}</div>
-  //           <div class="reviewer-since">Google Review</div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   `).join('');
-  // }
-  // loadGoogleReviews();
 </script>
 
 </body>

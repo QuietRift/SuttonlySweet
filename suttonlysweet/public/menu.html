@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Menu — Suttonly Sweet</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #E8177A;
+    --pink-light: #f5589e;
+    --pink-pale: #fde8f2;
+    --pink-ultra-pale: #fff5fa;
+    --green: #2D6B4A;
+    --cream: #FFF9F5;
+    --warm-white: #FFFBF8;
+    --text-dark: #1a1a1a;
+    --text-mid: #666;
+    --border: rgba(232,23,122,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.4rem;
+    color: var(--pink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-mid);
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--pink); }
+
+  .nav-cta {
+    background: var(--pink);
+    color: white !important;
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-weight: 600 !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--pink-light) !important; }
+
+  #cart-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--pink-pale);
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--pink);
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    background: var(--pink);
+    padding: 56px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+
+  .page-header h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: white;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+  }
+
+  .page-header p {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.95rem;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* CATEGORY TABS */
+  .category-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 24px 48px;
+    overflow-x: auto;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: none;
+  }
+
+  .category-tabs::-webkit-scrollbar { display: none; }
+
+  .cat-tab {
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .cat-tab:hover { border-color: var(--pink); color: var(--pink); }
+  .cat-tab.active { background: var(--pink); color: white; border-color: var(--pink); }
+
+  /* MENU CONTENT */
+  .menu-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 48px 80px;
+  }
+
+  .category-section {
+    margin-bottom: 64px;
+  }
+
+  .category-section:last-child { margin-bottom: 0; }
+
+  .category-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--pink-pale);
+  }
+
+  .category-heading h2 {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.6rem;
+    color: var(--text-dark);
+  }
+
+  .category-heading span {
+    font-size: 1.8rem;
+  }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .menu-item-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .menu-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(232,23,122,0.12);
+  }
+
+  .item-img {
+    height: 160px;
+    background: var(--pink-ultra-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+  }
+
+  .item-body {
+    padding: 18px 20px;
+  }
+
+  .item-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+
+  .item-desc {
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    line-height: 1.55;
+    font-weight: 300;
+    margin-bottom: 16px;
+  }
+
+  .item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .item-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--pink);
+  }
+
+  .item-price.quote {
+    font-size: 0.85rem;
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .add-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--pink);
+    border: none;
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, background 0.2s;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .add-btn:hover { background: var(--pink-light); transform: scale(1.1); }
+  .add-btn.added { background: var(--green); }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-mid);
+  }
+
+  .loading-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--pink-pale);
+    border-top-color: var(--pink);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* CART DRAWER */
+  #cart-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 300;
+    backdrop-filter: blur(4px);
+  }
+
+  #cart-drawer {
+    position: fixed;
+    top: 0; right: -420px;
+    width: 400px;
+    max-width: 95vw;
+    height: 100vh;
+    background: white;
+    z-index: 301;
+    transition: right 0.3s ease;
+    box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .page-header { padding: 40px 20px; }
+    .category-tabs { padding: 16px 20px; }
+    .menu-content { padding: 32px 20px 60px; }
+    .items-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .items-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CART OVERLAY -->
+<div id="cart-overlay" onclick="closeCart()"></div>
+<div id="cart-drawer">
+  <div style="padding:28px 28px 20px;border-bottom:1px solid rgba(232,23,122,0.12);display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-family:'Pacifico',cursive;font-size:1.2rem;color:var(--pink);">Your Order</div>
+      <div style="font-size:0.75rem;color:var(--text-mid);margin-top:2px;">Review before submitting</div>
+    </div>
+    <button onclick="closeCart()" style="border:none;background:none;font-size:1.4rem;cursor:pointer;color:var(--text-mid);padding:4px;">✕</button>
+  </div>
+  <div id="cart-items" style="flex:1;overflow-y:auto;padding:20px 28px;"></div>
+  <div id="cart-footer" style="padding:20px 28px;border-top:1px solid rgba(232,23,122,0.12);display:none;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:16px;font-weight:700;font-size:1rem;">
+      <span>Estimated Total</span>
+      <span id="cart-total" style="color:var(--pink);">$0.00</span>
+    </div>
+    <a href="/order.html" style="display:block;background:var(--pink);color:white;text-align:center;padding:16px;border-radius:100px;text-decoration:none;font-weight:700;font-size:0.95rem;box-shadow:0 4px 20px rgba(232,23,122,0.35);">Continue to Order Form →</a>
+    <p style="font-size:0.72rem;color:var(--text-mid);text-align:center;margin-top:10px;">No payment now — we review first</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Suttonly Sweet</a>
+  <ul class="nav-links">
+    <li><a href="/menu.html">Menu</a></li>
+    <li><a href="/#about">Our Story</a></li>
+    <li><a href="/#custom">Custom Orders</a></li>
+    <li><a href="/#contact">Find Us</a></li>
+    <li><a href="/order.html" class="nav-cta">Order Now</a></li>
+  </ul>
+  <button onclick="toggleCart()" id="cart-btn">
+    🛒 Cart <span id="cart-count" style="display:none;background:var(--pink);color:white;border-radius:50%;width:18px;height:18px;font-size:0.65rem;font-weight:700;align-items:center;justify-content:center;">0</span>
+  </button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>Our Full Menu 🎂</h1>
+  <p>Everything baked fresh daily. Add to cart then place your request.</p>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="category-tabs" id="category-tabs">
+  <button class="cat-tab active" onclick="scrollToCategory('all', this)">All Items</button>
+</div>
+
+<!-- MENU CONTENT -->
+<div class="menu-content" id="menu-content">
+  <div class="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading menu...</p>
+  </div>
+</div>
+
+<script>
+  // ── MENU DATA ─────────────────────────────────────────
+  // This pulls from Square Catalog API via Netlify Function
+  // Falls back to static data if API not configured yet
+
+  const STATIC_MENU = [
+    {
+      category: '🎂 Cakes',
+      items: [
+        { id: 's1', name: 'Classic Strawberry Layer Cake', desc: '4-layer vanilla sponge, fresh strawberry filling, buttercream frosting. Serves 8–10.', price: 42, emoji: '🎂' },
+        { id: 's2', name: 'Classic Chocolate Fudge Cake', desc: 'Rich dark chocolate layers, ganache frosting, chocolate drizzle. Serves 8–10.', price: 38, emoji: '🍫' },
+        { id: 's3', name: 'Lemon Blueberry Cake', desc: 'Zesty lemon sponge, blueberry compote filling, cream cheese frosting. Serves 8–10.', price: 40, emoji: '🍋' },
+        { id: 's4', name: 'Red Velvet Celebration Cake', desc: 'Classic red velvet with cream cheese buttercream. A crowd favorite. Serves 8–10.', price: 44, emoji: '❤️' },
+        { id: 's5', name: 'Custom Cake (Quote Required)', desc: 'Your vision, our oven. Tell us what you need and we\'ll make it happen. Price varies.', price: 0, emoji: '✨' },
+      ]
+    },
+    {
+      category: '🧁 Cupcakes',
+      items: [
+        { id: 's6', name: 'Pink Velvet Cupcakes', desc: 'Soft, moist, cream cheese frosting. Our signature. Sold by the dozen.', price: 28, emoji: '🧁' },
+        { id: 's7', name: 'Chocolate Dream Cupcakes', desc: 'Dark chocolate base, ganache drizzle, chocolate buttercream. Sold by the dozen.', price: 26, emoji: '🍫' },
+        { id: 's8', name: 'Lemon Drop Cupcakes', desc: 'Bright lemon curd center, vanilla frosting, candied lemon zest. Sold by the dozen.', price: 26, emoji: '🍋' },
+      ]
+    },
+    {
+      category: '🍪 Cookies',
+      items: [
+        { id: 's9',  name: 'Brown Butter Cookies', desc: 'Thick, chewy, slightly crisp edges. Brown butter base with flaked sea salt finish. Dozen.', price: 16, emoji: '🍪' },
+        { id: 's10', name: 'Double Chocolate Cookies', desc: '70% dark chocolate chips, fudgy center, dusted with cocoa. Dozen.', price: 18, emoji: '🍫' },
+        { id: 's11', name: 'Snickerdoodle Cookies', desc: 'Classic cinnamon sugar coating, soft and pillowy center. Dozen.', price: 15, emoji: '🌀' },
+      ]
+    },
+    {
+      category: '🍫 Brownies',
+      items: [
+        { id: 's12', name: 'Fudge Brownie Tray', desc: 'Dense, gooey center with a crispy crinkle top. Cut to order. 9-piece tray.', price: 22, emoji: '🍫' },
+        { id: 's13', name: 'Salted Caramel Brownies', desc: 'Caramel swirl baked in, topped with flaked sea salt. Dangerously good. 9-piece tray.', price: 24, emoji: '🍮' },
+      ]
+    },
+    {
+      category: '🎉 Seasonal & Specialty',
+      items: [
+        { id: 's14', name: 'Seasonal Special', desc: 'Check our Instagram for what\'s fresh this week. Ask us what\'s available when ordering.', price: 0, emoji: '🌸' },
+      ]
+    }
+  ];
+
+  let cart = JSON.parse(sessionStorage.getItem('ss_cart') || '[]');
+  let menuData = [];
+
+  async function loadMenu() {
+    try {
+      // Try to pull from Square Catalog API
+      const res = await fetch('/api/get-menu');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.items && data.items.length > 0) {
+          // Group Square items by category
+          const grouped = {};
+          data.items.forEach(item => {
+            const cat = item.category || 'Other';
+            if (!grouped[cat]) grouped[cat] = [];
+            grouped[cat].push(item);
+          });
+          menuData = Object.entries(grouped).map(([cat, items]) => ({ category: cat, items }));
+          renderMenu(menuData);
+          return;
+        }
+      }
+    } catch (e) {
+      // API not configured yet — fall back to static
+    }
+    menuData = STATIC_MENU;
+    renderMenu(STATIC_MENU);
+  }
+
+  function renderMenu(data) {
+    const content = document.getElementById('menu-content');
+    const tabs = document.getElementById('category-tabs');
+
+    // Build category tabs
+    data.forEach(section => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-tab';
+      btn.textContent = section.category;
+      btn.onclick = () => scrollToCategory(section.category, btn);
+      tabs.appendChild(btn);
+    });
+
+    // Build menu sections
+    content.innerHTML = data.map(section => `
+      <div class="category-section" id="cat-${section.category.replace(/[^a-z0-9]/gi, '-')}">
+        <div class="category-heading">
+          <span>${section.category.split(' ')[0]}</span>
+          <h2>${section.category.split(' ').slice(1).join(' ')}</h2>
+        </div>
+        <div class="items-grid">
+          ${section.items.map(item => `
+            <div class="menu-item-card">
+              <div class="item-img">${item.emoji || '🎂'}</div>
+              <div class="item-body">
+                <div class="item-name">${item.name}</div>
+                <div class="item-desc">${item.desc || item.description || ''}</div>
+                <div class="item-footer">
+                  ${item.price > 0
+                    ? `<span class="item-price">$${item.price.toFixed(2)}</span>`
+                    : `<span class="item-price quote">Price on request</span>`
+                  }
+                  <button class="add-btn" id="btn-${item.id}" onclick="addToCart('${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.id}')">+</button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    renderCart();
+  }
+
+  function scrollToCategory(cat, btn) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    if (cat === 'all') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const el = document.getElementById(`cat-${cat.replace(/[^a-z0-9]/gi, '-')}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── CART ─────────────────────────────────────────────
+  function openCart() {
+    document.getElementById('cart-drawer').style.right = '0px';
+    document.getElementById('cart-overlay').style.display = 'block';
+  }
+
+  function closeCart() {
+    document.getElementById('cart-drawer').style.right = '-420px';
+    document.getElementById('cart-overlay').style.display = 'none';
+  }
+
+  function toggleCart() {
+    const drawer = document.getElementById('cart-drawer');
+    drawer.style.right === '0px' ? closeCart() : openCart();
+  }
+
+  function addToCart(name, price, id) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ name, price, qty: 1 });
+    }
+    // Flash the button green
+    const btn = document.getElementById(`btn-${id}`);
+    if (btn) {
+      btn.classList.add('added');
+      btn.textContent = '✓';
+      setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+'; }, 1000);
+    }
+    renderCart();
+    openCart();
+  }
+
+  function removeFromCart(name) {
+    cart = cart.filter(i => i.name !== name);
+    renderCart();
+  }
+
+  function changeCartQty(name, delta) {
+    const item = cart.find(i => i.name === name);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.name !== name);
+    renderCart();
+  }
+
+  function renderCart() {
+    const itemsEl = document.getElementById('cart-items');
+    const footerEl = document.getElementById('cart-footer');
+    const countEl = document.getElementById('cart-count');
+    const totalEl = document.getElementById('cart-total');
+
+    const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+    const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+    countEl.textContent = totalItems;
+    countEl.style.display = totalItems > 0 ? 'inline-flex' : 'none';
+    totalEl.textContent = `$${totalPrice.toFixed(2)}`;
+    footerEl.style.display = cart.length > 0 ? 'block' : 'none';
+
+    if (cart.length === 0) {
+      itemsEl.innerHTML = `
+        <div style="text-align:center;padding:60px 20px;color:#666;">
+          <div style="font-size:3rem;margin-bottom:12px;">🛒</div>
+          <p style="font-size:0.875rem;">Your cart is empty.<br>Add items from the menu above.</p>
+        </div>`;
+      return;
+    }
+
+    itemsEl.innerHTML = cart.map(item => `
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(232,23,122,0.08);">
+        <div style="flex:1;">
+          <div style="font-size:0.875rem;font-weight:600;color:#1a1a1a;">${item.name}</div>
+          <div style="font-size:0.78rem;color:#666;margin-top:2px;">$${item.price.toFixed(2)} each</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="display:flex;align-items:center;gap:6px;background:#fff5fa;border:1px solid rgba(232,23,122,0.15);border-radius:8px;padding:4px 8px;">
+            <button onclick="changeCartQty('${item.name.replace(/'/g,"\\'")}', -1)" style="border:none;background:none;color:#E8177A;font-size:1rem;cursor:pointer;font-weight:700;line-height:1;">−</button>
+            <span style="font-size:0.85rem;font-weight:700;min-width:16px;text-align:center;">${item.qty}</span>
+            <button onclick="changeCartQty('${item.name.replace(/'/g,"\\'")}', 1)" style="border:none;background:none;color:#E8177A;font-size:1rem;cursor:pointer;font-weight:700;line-height:1;">+</button>
+          </div>
+          <div style="font-size:0.9rem;font-weight:700;color:#E8177A;min-width:44px;text-align:right;">$${(item.price * item.qty).toFixed(2)}</div>
+          <button onclick="removeFromCart('${item.name.replace(/'/g,"\\'")}') " style="border:none;background:none;color:#ccc;cursor:pointer;font-size:1rem;padding:4px;">✕</button>
+        </div>
+      </div>
+    `).join('');
+
+    sessionStorage.setItem('ss_cart', JSON.stringify(cart));
+  }
+
+  loadMenu();
+  renderCart();
+</script>
+
+</body>
+</html>
