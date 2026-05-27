@@ -1,0 +1,14 @@
+{
+  "name": "suttonly-sweet",
+  "version": "1.0.0",
+  "description": "Suttonly Sweet Bakery Website",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "square": "^44.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
