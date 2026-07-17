@@ -1,0 +1,53 @@
+{
+  "settings": {
+    "minLeadDays": 4,
+    "allowedPickupWeekdays": [3, 4, 5, 6],
+    "weekdayKey": "0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat",
+    "deliveryFee": 10,
+    "deliveryEnabled": true,
+    "pickupNote": "Pickup address is shared in your confirmation."
+  },
+  "items": [
+    {
+      "id": "pound-cake",
+      "name": "Classic Pound Cake",
+      "description": "Dense, buttery, made from the original recipe. Whole loaf.",
+      "price": 30,
+      "unit": "loaf",
+      "image": "/images/pound-cake.jpg"
+    },
+    {
+      "id": "cookies-dozen",
+      "name": "Cookies (Dozen)",
+      "description": "Soft-baked chocolate chip, snickerdoodle, or mixed.",
+      "price": 24,
+      "unit": "dozen",
+      "image": "/images/cookies.jpg"
+    },
+    {
+      "id": "cupcakes-dozen",
+      "name": "Cupcakes (Dozen)",
+      "description": "Classic flavors, frosted fresh. Dozen minimum.",
+      "price": 36,
+      "unit": "dozen",
+      "image": "/images/cupcakes.jpg"
+    },
+    {
+      "id": "brownies-half",
+      "name": "Brownies (Half-Dozen)",
+      "description": "Fudgy, rich, made from scratch.",
+      "price": 18,
+      "unit": "half-dozen",
+      "image": "/images/brownies.jpg"
+    }
+  ],
+  "events": [
+    {
+      "id": "example-event",
+      "name": "Eastern Market Saturday",
+      "location": "Eastern Market, Shed 5, Detroit",
+      "date": "2026-07-25",
+      "hours": "9am-2pm"
+    }
+  ]
+}
