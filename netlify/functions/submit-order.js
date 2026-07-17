@@ -1,4 +1,4 @@
-const { Client, Environment } = require("square");
+const { SquareClient, SquareEnvironment } = require("square");
 
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
@@ -18,22 +18,20 @@ exports.handler = async function (event) {
     fulfillment, deliveryFee, address, notes, referral
   } = order;
 
-  // Basic validation
   if (!firstName || !lastName || !email || !phone || !itemType || !quantity || !dateNeeded) {
     return { statusCode: 400, body: JSON.stringify({ error: "Missing required fields" }) };
   }
 
-  const client = new Client({
-    accessToken: process.env.SQUARE_ACCESS_TOKEN,
+  const client = new SquareClient({
+    token: process.env.SQUARE_ACCESS_TOKEN,
     environment: process.env.SQUARE_ENVIRONMENT === "production"
-      ? Environment.Production
-      : Environment.Sandbox,
+      ? SquareEnvironment.Production
+      : SquareEnvironment.Sandbox,
   });
 
   try {
     const idempotencyKey = `order-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-    // Format the date for display
     const formattedDate = new Date(dateNeeded + "T00:00:00").toLocaleDateString("en-US", {
       weekday: "long", month: "long", day: "numeric", year: "numeric"
     });
@@ -42,36 +40,32 @@ exports.handler = async function (event) {
     const lineItems = [
       {
         name: `${itemType} — ${quantity}`,
-        description: [
+        note: [
           occasion ? `Occasion: ${occasion}` : "",
-          notes ? `Notes: ${notes}` : "",
-          `Date Needed: ${formattedDate}`,
-          referral ? `Heard about us: ${referral}` : ""
+          `Needed: ${formattedDate}`
         ].filter(Boolean).join(" | "),
         quantity: "1",
         basePriceMoney: {
-          amount: BigInt(0), // $0 placeholder — you set final price before sending
+          amount: BigInt(0), // $0 placeholder — set final price in dashboard before sending
           currency: "USD"
         }
       }
     ];
 
-    // Add delivery fee line item if applicable
     if (fulfillment === "delivery" && deliveryFee > 0) {
       lineItems.push({
         name: "Delivery Fee",
-        description: address
+        note: address
           ? `${address.street}, ${address.city}, ${address.state} ${address.zip}`
           : "Flat rate delivery",
         quantity: "1",
         basePriceMoney: {
-          amount: BigInt(deliveryFee * 100), // $10.00 = 1000 cents
+          amount: BigInt(Math.round(deliveryFee * 100)),
           currency: "USD"
         }
       });
     }
 
-    // Build invoice note
     const invoiceNote = [
       `Order Request from Suttonly Sweet Website`,
       `Customer: ${firstName} ${lastName}`,
@@ -91,52 +85,60 @@ exports.handler = async function (event) {
       `⚠️ Update line item price before sending invoice to customer.`
     ].filter(Boolean).join("\n");
 
-    // Create or find customer in Square
+    // Find or create the customer (new SDK: client.customers, responses are unwrapped)
     let customerId;
     try {
-      const searchRes = await client.customersApi.searchCustomers({
-        query: {
-          filter: {
-            emailAddress: { exact: email }
-          }
-        }
+      const searchRes = await client.customers.search({
+        query: { filter: { emailAddress: { exact: email } } }
       });
 
-      if (searchRes.result.customers && searchRes.result.customers.length > 0) {
-        customerId = searchRes.result.customers[0].id;
+      if (searchRes.customers && searchRes.customers.length > 0) {
+        customerId = searchRes.customers[0].id;
       } else {
-        // Create new customer
-        const createRes = await client.customersApi.createCustomer({
+        const createRes = await client.customers.create({
           idempotencyKey: `customer-${idempotencyKey}`,
           givenName: firstName,
           familyName: lastName,
           emailAddress: email,
           phoneNumber: phone
         });
-        customerId = createRes.result.customer.id;
+        customerId = createRes.customer && createRes.customer.id;
       }
     } catch (customerErr) {
       console.error("Customer create/find error:", customerErr);
-      // Continue without customer ID — invoice will still create
+      // Continue — invoice can still be created with recipient details
     }
 
-    // Get today's date for invoice
-    const today = new Date();
-    const invoiceDeliveryDate = today.toISOString().split("T")[0];
+    const locationId = process.env.SQUARE_LOCATION_ID;
+    if (!locationId) throw new Error("SQUARE_LOCATION_ID env var not set");
 
-    // Build invoice payload
-    const invoicePayload = {
+    // Create the draft Order
+    const orderRes = await client.orders.create({
+      idempotencyKey: `sq-order-${idempotencyKey}`,
+      order: {
+        locationId,
+        lineItems,
+        state: "DRAFT",
+        ...(customerId ? { customerId } : {})
+      }
+    });
+
+    const sqOrderId = orderRes.order.id;
+
+    // Create the draft invoice referencing the order.
+    // No scheduledAt: you review and hit Send manually in the dashboard.
+    const invoiceRes = await client.invoices.create({
       idempotencyKey,
       invoice: {
-        orderId: undefined, // will use lineItems directly via order
+        orderId: sqOrderId,
+        locationId,
         title: `Custom Order — ${firstName} ${lastName}`,
         description: invoiceNote,
-        scheduledAt: invoiceDeliveryDate,
         deliveryMethod: "EMAIL",
         paymentRequests: [
           {
             requestType: "BALANCE",
-            dueDate: dateNeeded, // due by the order date
+            dueDate: dateNeeded,
             automaticPaymentSource: "NONE"
           }
         ],
@@ -145,42 +147,70 @@ exports.handler = async function (event) {
           squareGiftCard: false,
           bankAccount: false
         },
-        ...(customerId ? { primaryRecipient: { customerId } } : {
-          primaryRecipient: {
-            givenName: firstName,
-            familyName: lastName,
-            emailAddress: email,
-            phoneNumber: phone
-          }
-        })
-      }
-    };
-
-    // First create an Order to attach to the invoice
-    const locationId = process.env.SQUARE_LOCATION_ID;
-    if (!locationId) throw new Error("SQUARE_LOCATION_ID env var not set");
-
-    const orderRes = await client.ordersApi.createOrder({
-      idempotencyKey: `sq-order-${idempotencyKey}`,
-      order: {
-        locationId,
-        lineItems,
-        state: "DRAFT"
+        ...(customerId
+          ? { primaryRecipient: { customerId } }
+          : {
+              primaryRecipient: {
+                givenName: firstName,
+                familyName: lastName,
+                emailAddress: email,
+                phoneNumber: phone
+              }
+            })
       }
     });
 
-    const sqOrderId = orderRes.result.order.id;
+    const invoiceId = invoiceRes.invoice && invoiceRes.invoice.id;
 
-    // Now create the invoice referencing the order
-    const invoiceRes = await client.invoicesApi.createInvoice({
-      idempotencyKey,
-      invoice: {
-        ...invoicePayload.invoice,
-        orderId: sqOrderId
+    // ---- Notify the owner (fire both legs; never fail the order over a ping) ----
+    const summaryLines = [
+      `${firstName} ${lastName} — ${itemType} (${quantity})`,
+      `Needed: ${formattedDate} | ${fulfillment === "delivery" ? "Delivery" : "Pickup"}`,
+      `Phone: ${phone} | Email: ${email}`,
+      notes ? `Notes: ${notes}` : "",
+      `Draft invoice: ${invoiceId || "created"}`
+    ].filter(Boolean).join("\n");
+
+    // Leg 1: Netlify Forms → triggers Netlify email notification
+    // (requires the hidden order-notification form in index.html)
+    if (process.env.URL) {
+      try {
+        await fetch(process.env.URL + "/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            "form-name": "order-notification",
+            customer: `${firstName} ${lastName}`,
+            email,
+            phone,
+            item: `${itemType} (${quantity})`,
+            "date-needed": formattedDate,
+            summary: summaryLines
+          }).toString()
+        });
+      } catch (e) {
+        console.error("Netlify Forms notification failed:", e.message);
       }
-    });
+    }
 
-    const invoiceId = invoiceRes.result.invoice.id;
+    // Leg 2 (optional): n8n webhook for Telegram/push alerts
+    if (process.env.N8N_ORDER_WEBHOOK_URL) {
+      try {
+        await fetch(process.env.N8N_ORDER_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: "suttonlysweet.com",
+            invoiceId,
+            customer: `${firstName} ${lastName}`,
+            email, phone, itemType, quantity,
+            dateNeeded, occasion, fulfillment, notes, referral
+          })
+        });
+      } catch (e) {
+        console.error("n8n webhook notification failed:", e.message);
+      }
+    }
 
     return {
       statusCode: 200,
@@ -193,13 +223,13 @@ exports.handler = async function (event) {
     };
 
   } catch (err) {
-    console.error("Square API error:", JSON.stringify(err, null, 2));
+    console.error("Square API error:", err && err.message ? err.message : err);
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         error: "Failed to create invoice",
-        detail: err.message || "Unknown error"
+        detail: (err && err.message) || "Unknown error"
       })
     };
   }
