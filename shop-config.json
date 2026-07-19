@@ -1,7 +1,12 @@
 {
   "settings": {
     "minLeadDays": 4,
-    "allowedPickupWeekdays": [3, 4, 5, 6],
+    "allowedPickupWeekdays": [
+      3,
+      4,
+      5,
+      6
+    ],
     "weekdayKey": "0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat",
     "deliveryFee": 10,
     "deliveryEnabled": true,
@@ -24,9 +29,21 @@
       "unit": "dozen",
       "emoji": "🧁",
       "flavors": [
-        { "id": "vanilla", "name": "Vanilla", "image": "/images/cupcakes-vanilla.jpg" },
-        { "id": "chocolate", "name": "Chocolate", "image": "/images/cupcakes-chocolate.jpg" },
-        { "id": "red-velvet", "name": "Red Velvet", "image": "/images/cupcakes-red-velvet.jpg" }
+        {
+          "id": "vanilla",
+          "name": "Vanilla",
+          "image": "/images/cupcakes-vanilla.jpg"
+        },
+        {
+          "id": "chocolate",
+          "name": "Chocolate",
+          "image": "/images/cupcakes-chocolate.jpg"
+        },
+        {
+          "id": "red-velvet",
+          "name": "Red Velvet",
+          "image": "/images/cupcakes-red-velvet.jpg"
+        }
       ]
     },
     {
@@ -37,10 +54,27 @@
       "unit": "dozen",
       "emoji": "🍪",
       "flavors": [
-        { "id": "choc-chip", "name": "Chocolate Chip", "image": "/images/cookies-choc-chip.jpg" },
-        { "id": "sugar", "name": "Sugar Cookie", "image": "/images/cookies-sugar.jpg" },
-        { "id": "lemon", "name": "Lemon Cookie", "image": "/images/cookies-lemon.jpg" },
-        { "id": "snickerdoodle", "name": "Snickerdoodle", "image": "/images/cookies-snickerdoodle.jpg" }
+        {
+          "id": "choc-chip",
+          "name": "Chunky Coco",
+          "flavor": "Chocolate Chip",
+          "image": "/images/cookies-choc-chip.jpg"
+        },
+        {
+          "id": "sugar",
+          "name": "Sugar Cookie",
+          "image": "/images/cookies-sugar.jpg"
+        },
+        {
+          "id": "lemon",
+          "name": "Lemon Cookie",
+          "image": "/images/cookies-lemon.jpg"
+        },
+        {
+          "id": "snickerdoodle",
+          "name": "Snickerdoodle",
+          "image": "/images/cookies-snickerdoodle.jpg"
+        }
       ]
     },
     {
@@ -51,8 +85,16 @@
       "unit": "half-dozen",
       "emoji": "🍫",
       "flavors": [
-        { "id": "classic", "name": "Classic Fudge", "image": "/images/brownies-classic.jpg" },
-        { "id": "walnut", "name": "Walnut", "image": "/images/brownies-walnut.jpg" }
+        {
+          "id": "classic",
+          "name": "Classic Fudge",
+          "image": "/images/brownies-classic.jpg"
+        },
+        {
+          "id": "walnut",
+          "name": "Walnut",
+          "image": "/images/brownies-walnut.jpg"
+        }
       ]
     }
   ],

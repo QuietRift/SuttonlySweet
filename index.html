@@ -614,13 +614,25 @@
     .mc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; }
     .mc-total { font-weight: 500; color: var(--pink); font-size: 1.05rem; }
     .mc-total small { color: #999; font-weight: 400; font-size: 0.75rem; }
+  
+    /* ===== LOGO ===== */
+    a.nav-logo { text-decoration: none; display: inline-flex; align-items: center; }
+    .nav-logo-img { height: 44px; width: auto; max-width: 240px; object-fit: contain; display: block; }
+    @media (max-width: 600px) { .nav-logo-img { height: 36px; max-width: 42vw; } }
+  
+    /* ===== CARD CATEGORY HEADER ===== */
+    .mc-category { padding: 0.85rem 1.25rem 0.65rem; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink); font-weight: 600; background: white; }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">Suttonly<span>Sweet</span></div>
+  <a class="nav-logo" href="#top" aria-label="Suttonly Sweet home">
+    <img src="/images/logo.png" alt="Suttonly Sweet" class="nav-logo-img"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'" />
+    <span class="nav-logo-text" style="display:none">Suttonly<span>Sweet</span></span>
+  </a>
   <div class="nav-links">
     <a href="#menu">Menu</a>
     <a href="#order">Order</a>
@@ -1237,6 +1249,7 @@ function renderMenu() {
     const hasCarousel = flavors.length > 1;
     return `
     <div class="menu-card" id="card-${item.id}">
+      <div class="mc-category">${item.name}</div>
       <div class="menu-card-img" id="img-${item.id}">
         <span class="fallback">${item.emoji || '🍰'}</span>
         ${hasCarousel ? `
@@ -1246,7 +1259,7 @@ function renderMenu() {
           <div class="mc-dots" id="dots-${item.id}"></div>` : ''}
       </div>
       <div class="menu-card-body">
-        <h4>${item.name}</h4>
+        <h4 id="title-${item.id}">${flavors[0].name}</h4>
         <p>${item.description}</p>
         <div class="mc-select-row">
           <select id="flavor-${item.id}" onchange="onFlavorSelect('${item.id}')" aria-label="${item.name} flavor">
@@ -1288,7 +1301,9 @@ function setCarousel(itemId, idx) {
     imgWrap.appendChild(img);
   }
   const tag = document.getElementById('tag-' + itemId);
-  if (tag) tag.textContent = f.name;
+  if (tag) tag.textContent = f.flavor || f.name;
+  const title = document.getElementById('title-' + itemId);
+  if (title) title.textContent = f.name;
   const dots = document.getElementById('dots-' + itemId);
   if (dots) dots.innerHTML = flavors.map((_, i) =>
     `<span class="mc-dot${i === flavorIdx[itemId] ? ' active' : ''}" onclick="setCarouselAndSelect('${itemId}', ${i})"></span>`).join('');
