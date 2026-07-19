@@ -5,40 +5,55 @@
     "weekdayKey": "0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat",
     "deliveryFee": 10,
     "deliveryEnabled": true,
-    "pickupNote": "Pickup address is shared in your confirmation."
+    "maxQty": 6
   },
   "items": [
     {
-      "id": "pound-cake",
-      "name": "Classic Pound Cake",
-      "description": "Dense, buttery, made from the original recipe. Whole loaf.",
-      "price": 30,
-      "unit": "loaf",
-      "image": "/images/pound-cake.jpg"
+      "id": "custom-cakes",
+      "type": "custom",
+      "name": "Custom Cakes",
+      "description": "Layered, decorated, and made to your exact vision. Every occasion deserves something special.",
+      "priceLabel": "Starting at $55",
+      "emoji": "🎂"
     },
     {
-      "id": "cookies-dozen",
-      "name": "Cookies (Dozen)",
-      "description": "Soft-baked chocolate chip, snickerdoodle, or mixed.",
-      "price": 24,
-      "unit": "dozen",
-      "image": "/images/cookies.jpg"
-    },
-    {
-      "id": "cupcakes-dozen",
-      "name": "Cupcakes (Dozen)",
-      "description": "Classic flavors, frosted fresh. Dozen minimum.",
+      "id": "cupcakes",
+      "name": "Cupcakes",
+      "description": "Dozen minimum. Classic flavors or custom — great for parties, offices, and celebrations.",
       "price": 36,
       "unit": "dozen",
-      "image": "/images/cupcakes.jpg"
+      "emoji": "🧁",
+      "flavors": [
+        { "id": "vanilla", "name": "Vanilla", "image": "/images/cupcakes-vanilla.jpg" },
+        { "id": "chocolate", "name": "Chocolate", "image": "/images/cupcakes-chocolate.jpg" },
+        { "id": "red-velvet", "name": "Red Velvet", "image": "/images/cupcakes-red-velvet.jpg" }
+      ]
     },
     {
-      "id": "brownies-half",
-      "name": "Brownies (Half-Dozen)",
-      "description": "Fudgy, rich, made from scratch.",
+      "id": "cookies",
+      "name": "Cookies",
+      "description": "Soft-baked, fresh, and absolutely dangerous. Pick your flavor.",
+      "price": 24,
+      "unit": "dozen",
+      "emoji": "🍪",
+      "flavors": [
+        { "id": "choc-chip", "name": "Chocolate Chip", "image": "/images/cookies-choc-chip.jpg" },
+        { "id": "sugar", "name": "Sugar Cookie", "image": "/images/cookies-sugar.jpg" },
+        { "id": "lemon", "name": "Lemon Cookie", "image": "/images/cookies-lemon.jpg" },
+        { "id": "snickerdoodle", "name": "Snickerdoodle", "image": "/images/cookies-snickerdoodle.jpg" }
+      ]
+    },
+    {
+      "id": "brownies",
+      "name": "Brownies",
+      "description": "Fudgy, rich, and made from scratch.",
       "price": 18,
       "unit": "half-dozen",
-      "image": "/images/brownies.jpg"
+      "emoji": "🍫",
+      "flavors": [
+        { "id": "classic", "name": "Classic Fudge", "image": "/images/brownies-classic.jpg" },
+        { "id": "walnut", "name": "Walnut", "image": "/images/brownies-walnut.jpg" }
+      ]
     }
   ],
   "events": [

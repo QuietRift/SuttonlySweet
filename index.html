@@ -538,6 +538,82 @@
       .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
       .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
     }
+  
+    /* ===== SHOP / CART ===== */
+    .shop { background: var(--cream); }
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .shop-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+    .shop-card-img { height: 190px; background: var(--pink-light); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .shop-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .shop-card-img .fallback { font-size: 3.5rem; }
+    .shop-card-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+    .shop-card-body h4 { font-family: 'Playfair Display', serif; color: var(--green); font-size: 1.15rem; }
+    .shop-card-body p { font-size: 0.87rem; color: #666; line-height: 1.5; flex: 1; }
+    .shop-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; }
+    .shop-price { font-weight: 500; color: var(--pink); font-size: 1.05rem; }
+    .btn-add { background: var(--green); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-add:hover { background: var(--green-mid); }
+
+    .cart-fab { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 120; background: var(--pink); color: white; border: none; border-radius: 50px; padding: 0.9rem 1.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; box-shadow: 0 8px 24px rgba(242,66,122,0.35); display: none; align-items: center; gap: 0.5rem; }
+    .cart-fab.visible { display: inline-flex; }
+
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; display: none; }
+    .cart-overlay.open { display: block; }
+    .cart-drawer { position: fixed; top: 0; right: -420px; width: min(420px, 100vw); height: 100vh; background: white; z-index: 160; transition: right 0.25s ease; display: flex; flex-direction: column; }
+    .cart-drawer.open { right: 0; }
+    .cart-head { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid #eee; }
+    .cart-head h3 { font-family: 'Playfair Display', serif; color: var(--green); }
+    .cart-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+    .cart-line { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.9rem 0; border-bottom: 1px dashed #eee; }
+    .cart-line-name { font-size: 0.92rem; font-weight: 500; color: var(--dark); }
+    .cart-line-price { font-size: 0.85rem; color: #888; }
+    .qty-ctrl { display: flex; align-items: center; gap: 0.5rem; }
+    .qty-btn { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--green); background: white; color: var(--green); cursor: pointer; font-weight: 500; line-height: 1; }
+    .cart-foot { padding: 1.25rem 1.5rem; border-top: 1px solid #eee; }
+    .cart-total-row { display: flex; justify-content: space-between; font-weight: 500; margin-bottom: 1rem; color: var(--dark); }
+    .btn-checkout { width: 100%; background: var(--pink); color: white; border: none; padding: 0.9rem; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; }
+    .btn-checkout:hover { background: #d63267; }
+    .btn-checkout:disabled { opacity: 0.6; cursor: default; }
+    .cart-empty { text-align: center; color: #999; padding: 3rem 1rem; font-size: 0.95rem; }
+
+    .co-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 2rem 1rem; }
+    .co-modal-overlay.open { display: flex; }
+    .co-modal { background: white; border-radius: 20px; max-width: 520px; width: 100%; padding: 2rem; }
+    .co-modal h3 { font-family: 'Playfair Display', serif; color: var(--green); margin-bottom: 1.25rem; }
+    .co-modal .form-group { margin-bottom: 1rem; }
+    .co-modal label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--green); margin-bottom: 0.35rem; }
+    .co-modal input, .co-modal select, .co-modal textarea { width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #e5e0d8; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; }
+    .co-modal input:focus, .co-modal select:focus { outline: 2px solid var(--pink-light); border-color: var(--pink); }
+    .co-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+    @media (max-width: 480px) { .co-row { grid-template-columns: 1fr; } }
+    .co-fulfill { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .co-fulfill button { flex: 1; min-width: 100px; padding: 0.6rem; border-radius: 10px; border: 1.5px solid #e5e0d8; background: white; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; }
+    .co-fulfill button.active { border-color: var(--pink); background: var(--pink-light); color: var(--pink); font-weight: 500; }
+    .co-hint { font-size: 0.78rem; color: #999; margin-top: 0.3rem; }
+    .co-error { color: #c0392b; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .co-error.visible { display: block; }
+    .co-actions { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+    .co-actions .btn-checkout { flex: 1; }
+    .co-cancel { background: none; border: 1.5px solid #ddd; border-radius: 50px; padding: 0.9rem 1.4rem; font-family: 'DM Sans', sans-serif; cursor: pointer; color: #777; }
+  
+    /* ===== SHOPPABLE MENU CARDS ===== */
+    .menu-card-img { position: relative; overflow: hidden; }
+    .menu-card-img img.mc-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .mc-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(255,255,255,0.85); color: var(--green); font-size: 1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.12); line-height: 1; }
+    .mc-arrow:hover { background: white; }
+    .mc-arrow.prev { left: 10px; }
+    .mc-arrow.next { right: 10px; }
+    .mc-dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 2; }
+    .mc-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.08); cursor: pointer; }
+    .mc-dot.active { background: var(--pink); }
+    .mc-flavor-tag { position: absolute; top: 10px; left: 10px; z-index: 2; background: rgba(255,255,255,0.9); color: var(--green); font-size: 0.72rem; font-weight: 500; padding: 0.25rem 0.7rem; border-radius: 50px; }
+    .mc-select-row { display: flex; gap: 0.6rem; margin: 0.75rem 0 0.25rem; }
+    .mc-select-row select { flex: 1; min-width: 0; padding: 0.55rem 0.6rem; border: 1.5px solid #e5e0d8; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; background: white; color: var(--dark); }
+    .mc-select-row select:focus { outline: 2px solid var(--pink-light); border-color: var(--pink); }
+    .mc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; }
+    .mc-total { font-weight: 500; color: var(--pink); font-size: 1.05rem; }
+    .mc-total small { color: #999; font-weight: 400; font-size: 0.75rem; }
   </style>
 </head>
 <body>
@@ -611,48 +687,7 @@
         <div class="section-title">Our Menu</div>
       </div>
     </div>
-    <div class="menu-grid">
-      <div class="menu-card">
-        <div class="menu-card-img">🎂</div>
-        <div class="menu-card-body">
-          <h4>Custom Cakes</h4>
-          <p>Layered, decorated, and made to your exact vision. Every occasion deserves something special.</p>
-          <div class="menu-card-footer">
-            <span class="menu-price">Starting at $55</span>
-          </div>
-        </div>
-      </div>
-      <div class="menu-card">
-        <div class="menu-card-img">🧁</div>
-        <div class="menu-card-body">
-          <h4>Cupcakes</h4>
-          <p>Dozen minimum. Classic flavors or custom — great for parties, offices, and celebrations.</p>
-          <div class="menu-card-footer">
-            <span class="menu-price">$36 / dozen</span>
-          </div>
-        </div>
-      </div>
-      <div class="menu-card">
-        <div class="menu-card-img">🍪</div>
-        <div class="menu-card-body">
-          <h4>Cookies</h4>
-          <p>Soft-baked, fresh, and absolutely dangerous. Chocolate chip, snickerdoodle, and seasonal flavors.</p>
-          <div class="menu-card-footer">
-            <span class="menu-price">$24 / dozen</span>
-          </div>
-        </div>
-      </div>
-      <div class="menu-card">
-        <div class="menu-card-img">🍫</div>
-        <div class="menu-card-body">
-          <h4>Brownies</h4>
-          <p>Fudgy, rich, and made from scratch. Available by the half-dozen or full pan.</p>
-          <div class="menu-card-footer">
-            <span class="menu-price">$18 / half-dozen</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="menu-grid" id="menuGrid"><!-- rendered from shop-config.json --></div>
   </div>
 </section>
 
@@ -920,6 +955,110 @@
   </div>
 </footer>
 
+<!-- Hidden form: registers "order-notification" with Netlify Forms so
+     the submit-order function can trigger email alerts. Do not remove. -->
+<form name="order-notification" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="customer" />
+  <input type="email" name="email" />
+  <input type="text" name="phone" />
+  <input type="text" name="item" />
+  <input type="text" name="date-needed" />
+  <textarea name="summary"></textarea>
+</form>
+
+<!-- CART -->
+<button class="cart-fab" id="cartFab" onclick="openCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="cart-close" onclick="closeCart()" aria-label="Close cart">&times;</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-total-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+    <button class="btn-checkout" id="cartCheckoutBtn" onclick="openCheckout()">Check Out</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="co-modal-overlay" id="coOverlay">
+  <div class="co-modal">
+    <h3>Almost There</h3>
+
+    <div class="co-row">
+      <div class="form-group">
+        <label>First Name *</label>
+        <input type="text" id="coFirst" autocomplete="given-name" />
+      </div>
+      <div class="form-group">
+        <label>Last Name *</label>
+        <input type="text" id="coLast" autocomplete="family-name" />
+      </div>
+    </div>
+    <div class="co-row">
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" id="coEmail" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Phone *</label>
+        <input type="tel" id="coPhone" autocomplete="tel" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>How are you getting your order? *</label>
+      <div class="co-fulfill">
+        <button type="button" id="fPickup" class="active" onclick="setFulfill('pickup')">Pickup</button>
+        <button type="button" id="fEvent" onclick="setFulfill('event')" style="display:none">Event Pickup</button>
+        <button type="button" id="fDelivery" onclick="setFulfill('delivery')">Delivery (+$<span id="delFeeLabel">10</span>)</button>
+      </div>
+    </div>
+
+    <div class="form-group" id="coDateWrap">
+      <label>Pickup / Delivery Date *</label>
+      <input type="date" id="coDate" />
+      <div class="co-hint" id="coDateHint"></div>
+    </div>
+
+    <div class="form-group" id="coEventWrap" style="display:none">
+      <label>Which event? *</label>
+      <select id="coEvent"></select>
+      <div class="co-hint" id="coEventHint"></div>
+    </div>
+
+    <div id="coAddrWrap" style="display:none">
+      <div class="form-group">
+        <label>Street Address *</label>
+        <input type="text" id="coStreet" autocomplete="street-address" />
+      </div>
+      <div class="co-row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" id="coCity" value="Detroit" />
+        </div>
+        <div class="form-group">
+          <label>ZIP *</label>
+          <input type="text" id="coZip" autocomplete="postal-code" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Order Notes (optional)</label>
+      <textarea id="coNotes" rows="2" placeholder="Allergies, flavor choice, anything we should know"></textarea>
+    </div>
+
+    <div class="co-error" id="coError"></div>
+
+    <div class="co-actions">
+      <button class="co-cancel" onclick="closeCheckout()">Back</button>
+      <button class="btn-checkout" id="coPayBtn" onclick="startCheckout()">Continue to Payment</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1043,5 +1182,318 @@
   }
 </script>
 
+<script>
+// ===== SHOPPABLE MENU (config-driven from shop-config.json) =====
+let SHOP = null;
+const cart = {};       // { "itemId|flavorId": qty }
+const flavorIdx = {};  // { itemId: current carousel index }
+
+fetch('/shop-config.json')
+  .then(r => r.json())
+  .then(cfg => { SHOP = cfg; renderMenu(); initCheckoutUI(); syncRequestDropdown(); })
+  .catch(() => { document.getElementById('menuGrid').innerHTML = '<p style="color:#999">Menu is loading… refresh if this persists.</p>'; });
+
+const fmt = n => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
+const getItem = id => SHOP.items.find(i => i.id === id);
+const getFlavor = (item, fid) => (item.flavors || []).find(f => f.id === fid);
+const unitPrice = (item, flavor) => (flavor && flavor.price != null) ? flavor.price : item.price;
+
+function syncRequestDropdown() {
+  const sel = document.getElementById('itemType');
+  if (!sel) return;
+  const first = sel.querySelector('option[value=""]');
+  sel.innerHTML = '';
+  if (first) sel.appendChild(first);
+  const names = SHOP.items.filter(i => i.type !== 'custom').map(i => i.name);
+  ['Custom Cake', ...names, 'Other / Mixed'].forEach(name => {
+    const o = document.createElement('option');
+    o.textContent = name;
+    sel.appendChild(o);
+  });
+}
+
+function renderMenu() {
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = SHOP.items.map(item => {
+    if (item.type === 'custom') {
+      return `
+      <div class="menu-card">
+        <div class="menu-card-img">${item.emoji || '🎂'}</div>
+        <div class="menu-card-body">
+          <h4>${item.name}</h4>
+          <p>${item.description}</p>
+          <div class="mc-footer">
+            <span class="menu-price">${item.priceLabel || ''}</span>
+            <button class="btn-add" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Request</button>
+          </div>
+        </div>
+      </div>`;
+    }
+    const flavors = item.flavors && item.flavors.length ? item.flavors : [{ id: '_default', name: item.name }];
+    flavorIdx[item.id] = 0;
+    const maxQty = item.maxQty || SHOP.settings.maxQty || 6;
+    const qtyOpts = Array.from({ length: maxQty }, (_, i) =>
+      `<option value="${i + 1}">${i + 1} ${item.unit || ''}</option>`).join('');
+    const hasCarousel = flavors.length > 1;
+    return `
+    <div class="menu-card" id="card-${item.id}">
+      <div class="menu-card-img" id="img-${item.id}">
+        <span class="fallback">${item.emoji || '🍰'}</span>
+        ${hasCarousel ? `
+          <button class="mc-arrow prev" onclick="carouselNav('${item.id}', -1)" aria-label="Previous flavor">‹</button>
+          <button class="mc-arrow next" onclick="carouselNav('${item.id}', 1)" aria-label="Next flavor">›</button>
+          <span class="mc-flavor-tag" id="tag-${item.id}"></span>
+          <div class="mc-dots" id="dots-${item.id}"></div>` : ''}
+      </div>
+      <div class="menu-card-body">
+        <h4>${item.name}</h4>
+        <p>${item.description}</p>
+        <div class="mc-select-row">
+          <select id="flavor-${item.id}" onchange="onFlavorSelect('${item.id}')" aria-label="${item.name} flavor">
+            ${flavors.map(f => `<option value="${f.id}">${f.name}</option>`).join('')}
+          </select>
+          <select id="qty-${item.id}" onchange="updateCardPrice('${item.id}')" aria-label="${item.name} quantity">
+            ${qtyOpts}
+          </select>
+        </div>
+        <div class="mc-footer">
+          <span class="mc-total" id="price-${item.id}"></span>
+          <button class="btn-add" onclick="addToCartV('${item.id}')">Add to Cart</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  SHOP.items.filter(i => i.type !== 'custom').forEach(item => {
+    if (item.flavors && item.flavors.length > 1) setCarousel(item.id, 0);
+    updateCardPrice(item.id);
+  });
+}
+
+function setCarousel(itemId, idx) {
+  const item = getItem(itemId);
+  const flavors = item.flavors || [];
+  if (!flavors.length) return;
+  flavorIdx[itemId] = (idx + flavors.length) % flavors.length;
+  const f = flavors[flavorIdx[itemId]];
+  const imgWrap = document.getElementById('img-' + itemId);
+  const old = imgWrap.querySelector('img.mc-photo');
+  if (old) old.remove();
+  if (f.image) {
+    const img = document.createElement('img');
+    img.className = 'mc-photo';
+    img.alt = item.name + ' — ' + f.name;
+    img.src = f.image;
+    img.onerror = () => img.remove(); // fall back to emoji
+    imgWrap.appendChild(img);
+  }
+  const tag = document.getElementById('tag-' + itemId);
+  if (tag) tag.textContent = f.name;
+  const dots = document.getElementById('dots-' + itemId);
+  if (dots) dots.innerHTML = flavors.map((_, i) =>
+    `<span class="mc-dot${i === flavorIdx[itemId] ? ' active' : ''}" onclick="setCarouselAndSelect('${itemId}', ${i})"></span>`).join('');
+  const sel = document.getElementById('flavor-' + itemId);
+  if (sel) sel.value = f.id;
+  updateCardPrice(itemId);
+}
+
+function setCarouselAndSelect(itemId, idx) { setCarousel(itemId, idx); }
+function carouselNav(itemId, dir) { setCarousel(itemId, flavorIdx[itemId] + dir); }
+
+function onFlavorSelect(itemId) {
+  const item = getItem(itemId);
+  const fid = document.getElementById('flavor-' + itemId).value;
+  const idx = (item.flavors || []).findIndex(f => f.id === fid);
+  if (idx >= 0) setCarousel(itemId, idx);
+  else updateCardPrice(itemId);
+}
+
+function updateCardPrice(itemId) {
+  const item = getItem(itemId);
+  const fid = document.getElementById('flavor-' + itemId).value;
+  const qty = parseInt(document.getElementById('qty-' + itemId).value, 10) || 1;
+  const price = unitPrice(item, getFlavor(item, fid)) * qty;
+  const el = document.getElementById('price-' + itemId);
+  el.innerHTML = fmt(price) + (qty === 1 && item.unit ? ` <small>/ ${item.unit}</small>` : '');
+}
+
+function addToCartV(itemId) {
+  const item = getItem(itemId);
+  const fid = document.getElementById('flavor-' + itemId).value;
+  const qty = parseInt(document.getElementById('qty-' + itemId).value, 10) || 1;
+  const key = itemId + '|' + fid;
+  cart[key] = (cart[key] || 0) + qty;
+  renderCart();
+  const f = getFlavor(item, fid);
+  showToast(`Added: ${f && f.id !== '_default' ? f.name + ' ' : ''}${item.name} ×${qty}`);
+}
+
+function cartEntries() {
+  return Object.entries(cart).map(([key, qty]) => {
+    const [id, fid] = key.split('|');
+    const item = getItem(id);
+    if (!item) return null;
+    const flavor = getFlavor(item, fid);
+    return { key, item, flavor, qty };
+  }).filter(Boolean);
+}
+function lineLabel(e) {
+  return e.flavor && e.flavor.id !== '_default' ? `${e.item.name} — ${e.flavor.name}` : e.item.name;
+}
+function cartSubtotal() {
+  return cartEntries().reduce((s, e) => s + unitPrice(e.item, e.flavor) * e.qty, 0);
+}
+
+function renderCart() {
+  const entries = cartEntries();
+  const count = entries.reduce((s, e) => s + e.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartFab').classList.toggle('visible', count > 0);
+  document.getElementById('cartCheckoutBtn').disabled = count === 0;
+  document.getElementById('cartSubtotal').textContent = fmt(cartSubtotal());
+  const wrap = document.getElementById('cartItems');
+  wrap.innerHTML = count === 0
+    ? '<div class="cart-empty">Your cart is empty.<br>Go grab something sweet.</div>'
+    : entries.map(e => `
+      <div class="cart-line">
+        <div>
+          <div class="cart-line-name">${lineLabel(e)}</div>
+          <div class="cart-line-price">${fmt(unitPrice(e.item, e.flavor))} / ${e.item.unit || 'each'}</div>
+        </div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty('${e.key}', -1)">−</button>
+          <span>${e.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${e.key}', 1)">+</button>
+        </div>
+      </div>`).join('');
+}
+
+function changeQty(key, delta) {
+  cart[key] = (cart[key] || 0) + delta;
+  if (cart[key] <= 0) delete cart[key];
+  renderCart();
+}
+
+function openCart() { document.getElementById('cartDrawer').classList.add('open'); document.getElementById('cartOverlay').classList.add('open'); }
+function closeCart() { document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('open'); }
+
+// ===== CHECKOUT =====
+let fulfillType = 'pickup';
+
+function initCheckoutUI() {
+  const S = SHOP.settings;
+  document.getElementById('delFeeLabel').textContent = S.deliveryFee;
+  if (!S.deliveryEnabled) document.getElementById('fDelivery').style.display = 'none';
+
+  const min = new Date();
+  min.setDate(min.getDate() + S.minLeadDays);
+  document.getElementById('coDate').min = min.toISOString().split('T')[0];
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const allowed = (S.allowedPickupWeekdays || []).map(d => dayNames[d]).join(', ');
+  document.getElementById('coDateHint').textContent =
+    `At least ${S.minLeadDays} days out` + (allowed ? ` · Available days: ${allowed}` : '');
+
+  const today = new Date().toISOString().split('T')[0];
+  const events = (SHOP.events || []).filter(e => e.date >= today);
+  if (events.length > 0) {
+    document.getElementById('fEvent').style.display = '';
+    document.getElementById('coEvent').innerHTML =
+      events.map(e => `<option value="${e.id}">${e.name} — ${e.date}${e.hours ? ' (' + e.hours + ')' : ''}</option>`).join('');
+    updateEventHint();
+    document.getElementById('coEvent').addEventListener('change', updateEventHint);
+  }
+
+  document.getElementById('coDate').addEventListener('change', validateDay);
+}
+
+function updateEventHint() {
+  const ev = (SHOP.events || []).find(e => e.id === document.getElementById('coEvent').value);
+  document.getElementById('coEventHint').textContent = ev ? ev.location : '';
+}
+
+function validateDay() {
+  const S = SHOP.settings;
+  const val = document.getElementById('coDate').value;
+  if (!val || !S.allowedPickupWeekdays || S.allowedPickupWeekdays.length === 0) return true;
+  const day = new Date(val + 'T00:00:00').getDay();
+  const ok = S.allowedPickupWeekdays.includes(day);
+  showCoError(ok ? '' : "That day isn't available — check the available days above.");
+  return ok;
+}
+
+function setFulfill(type) {
+  fulfillType = type;
+  ['Pickup','Event','Delivery'].forEach(t =>
+    document.getElementById('f' + t).classList.toggle('active', t.toLowerCase() === type));
+  document.getElementById('coDateWrap').style.display = type === 'event' ? 'none' : '';
+  document.getElementById('coEventWrap').style.display = type === 'event' ? '' : 'none';
+  document.getElementById('coAddrWrap').style.display = type === 'delivery' ? '' : 'none';
+  showCoError('');
+}
+
+function openCheckout() { closeCart(); document.getElementById('coOverlay').classList.add('open'); }
+function closeCheckout() { document.getElementById('coOverlay').classList.remove('open'); }
+function showCoError(msg) {
+  const el = document.getElementById('coError');
+  el.textContent = msg;
+  el.classList.toggle('visible', !!msg);
+}
+
+async function startCheckout() {
+  const get = id => document.getElementById(id).value.trim();
+  const customer = { firstName: get('coFirst'), lastName: get('coLast'), email: get('coEmail'), phone: get('coPhone') };
+  if (!customer.firstName || !customer.lastName || !customer.email || !customer.phone) {
+    return showCoError('Please fill in your name, email, and phone.');
+  }
+
+  const fulfillment = { type: fulfillType, notes: get('coNotes') };
+  if (fulfillType === 'event') {
+    fulfillment.eventId = get('coEvent');
+    if (!fulfillment.eventId) return showCoError('Pick an event.');
+  } else {
+    fulfillment.date = get('coDate');
+    if (!fulfillment.date) return showCoError('Pick a date.');
+    if (!validateDay()) return;
+    if (fulfillType === 'delivery') {
+      fulfillment.address = { street: get('coStreet'), city: get('coCity'), zip: get('coZip') };
+      if (!fulfillment.address.street || !fulfillment.address.city || !fulfillment.address.zip) {
+        return showCoError('Fill in the delivery address.');
+      }
+    }
+  }
+
+  const btn = document.getElementById('coPayBtn');
+  btn.disabled = true; btn.textContent = 'Setting up payment…';
+  showCoError('');
+
+  try {
+    const res = await fetch('/.netlify/functions/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cart: Object.entries(cart).map(([key, qty]) => {
+          const [id, flavorId] = key.split('|');
+          return { id, flavorId, qty };
+        }),
+        customer, fulfillment
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.checkoutUrl) {
+      window.location.href = data.checkoutUrl;
+    } else {
+      throw new Error(data.error || 'Checkout failed');
+    }
+  } catch (err) {
+    showCoError(err.message + ' — try again or use the custom order form below.');
+    btn.disabled = false; btn.textContent = 'Continue to Payment';
+  }
+}
+
+if (new URLSearchParams(location.search).get('order') === 'success') {
+  showToast('🎉 Payment received! Check your email for your Square receipt.');
+  history.replaceState(null, '', location.pathname);
+}
+</script>
 </body>
 </html>
