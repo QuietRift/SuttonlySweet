@@ -1230,6 +1230,7 @@ function renderMenu() {
     if (item.type === 'custom') {
       return `
       <div class="menu-card">
+        <div class="mc-category">${item.name}</div>
         <div class="menu-card-img">${item.emoji || '🎂'}</div>
         <div class="menu-card-body">
           <h4>${item.name}</h4>
