@@ -56,18 +56,20 @@
       "flavors": [
         {
           "id": "choc-chip",
-          "name": "Chunky Coco",
+          "name": "Love At First Bite",
           "flavor": "Chocolate Chip",
           "image": "/images/cookies-choc-chip.jpg"
         },
         {
-          "id": "sugar",
-          "name": "Sugar Cookie",
+          "id": "banana-pudding",
+          "name": "Sweet On You",
+          "flavor": "Banana Pudding",
           "image": "/images/cookies-sugar.jpg"
         },
         {
           "id": "lemon",
-          "name": "Lemon Cookie",
+          "name": "Pucker Up",
+          "flavor": "Lemon Cookie",
           "image": "/images/cookies-lemon.jpg"
         },
         {
