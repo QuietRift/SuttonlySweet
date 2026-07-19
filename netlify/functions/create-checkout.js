@@ -79,18 +79,35 @@ exports.handler = async function (event) {
   for (const entry of cart) {
     const item = (CONFIG.items || []).find(i => i.id === entry.id);
     const qty = parseInt(entry.qty, 10);
-    if (!item || !qty || qty < 1 || qty > 50) {
+    if (!item || item.type === "custom" || !qty || qty < 1 || qty > 50) {
       return json(400, { error: "Invalid item in cart" });
     }
+
+    // Resolve flavor if this item has variants
+    let flavor = null;
+    let name = item.name;
+    if (Array.isArray(item.flavors) && item.flavors.length > 0) {
+      flavor = item.flavors.find(f => f.id === entry.flavorId);
+      if (!flavor && entry.flavorId !== "_default") {
+        return json(400, { error: "Invalid flavor in cart" });
+      }
+      if (flavor) name = `${item.name} — ${flavor.name}`;
+    }
+
+    const price = (flavor && flavor.price != null) ? flavor.price : item.price;
+    if (typeof price !== "number" || price <= 0) {
+      return json(400, { error: "Item has no valid price" });
+    }
+
     lineItems.push({
-      name: item.name,
+      name: name + (item.unit ? ` (${item.unit})` : ""),
       quantity: String(qty),
       basePriceMoney: {
-        amount: BigInt(Math.round(item.price * 100)),
+        amount: BigInt(Math.round(price * 100)),
         currency: "USD"
       }
     });
-    summaryParts.push(`${item.name} x${qty}`);
+    summaryParts.push(`${name} x${qty}`);
   }
 
   if (fulfillment.type === "delivery" && S.deliveryFee > 0) {
