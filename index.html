@@ -915,6 +915,21 @@
 </section>
 
 <!-- FOOTER -->
+<!-- LOYALTY LIST -->
+<section style="background: var(--pink-light); padding: 4rem 2rem;">
+  <div style="max-width: 620px; margin: 0 auto; text-align: center;">
+    <div class="section-label">Stay Sweet</div>
+    <h2 style="font-family: 'Playfair Display', serif; color: var(--green); font-size: 1.9rem; margin-bottom: 0.6rem;">Join the Loyalty List</h2>
+    <p style="color: #6b5a50; margin-bottom: 1.5rem;">First dibs on seasonal menus, event pop-ups, and loyalty-only treats. No spam — just sweets.</p>
+    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;">
+      <input type="text" id="loyName" placeholder="First name (optional)" style="flex: 1; min-width: 140px; max-width: 200px; padding: 0.8rem 1rem; border: 1.5px solid #e5d0d8; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem;" />
+      <input type="email" id="loyEmail" placeholder="Your email" style="flex: 2; min-width: 200px; padding: 0.8rem 1rem; border: 1.5px solid #e5d0d8; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem;" />
+      <input type="text" id="loyWebsite" style="display:none" tabindex="-1" autocomplete="off" />
+      <button id="loyBtn" onclick="joinLoyalty()" style="background: var(--pink); color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer;">Join</button>
+    </div>
+  </div>
+</section>
+
 <footer id="contact">
   <div class="footer-grid">
     <div class="footer-brand">
@@ -1533,6 +1548,33 @@ async function startCheckout() {
     showCoError(err.message + ' — try again or use the custom order form below.');
     btn.disabled = false; btn.textContent = 'Continue to Payment';
   }
+}
+
+async function joinLoyalty() {
+  const email = document.getElementById('loyEmail').value.trim();
+  const firstName = document.getElementById('loyName').value.trim();
+  const website = document.getElementById('loyWebsite').value; // honeypot
+  const btn = document.getElementById('loyBtn');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('Please enter a valid email.', true);
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Joining…';
+  try {
+    const res = await fetch('/.netlify/functions/join-list', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, firstName, website })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Signup failed');
+    showToast("🧁 You're on the list!");
+    document.getElementById('loyEmail').value = '';
+    document.getElementById('loyName').value = '';
+  } catch (err) {
+    showToast(err.message, true);
+  }
+  btn.disabled = false; btn.textContent = 'Join';
 }
 
 if (new URLSearchParams(location.search).get('order') === 'success') {
