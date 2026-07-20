@@ -46,7 +46,7 @@ exports.handler = async function (event) {
         ].filter(Boolean).join(" | "),
         quantity: "1",
         basePriceMoney: {
-          amount: BigInt(0), // $0 placeholder — set final price in dashboard before sending
+          amount: BigInt(100), // $1 placeholder — set final price in dashboard before sending
           currency: "USD"
         }
       }
@@ -118,7 +118,7 @@ exports.handler = async function (event) {
       order: {
         locationId,
         lineItems,
-        state: "DRAFT",
+        state: "OPEN", // Invoices API requires OPEN orders
         ...(customerId ? { customerId } : {})
       }
     });
