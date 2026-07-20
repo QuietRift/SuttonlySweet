@@ -1,4 +1,5 @@
 const { SquareClient, SquareEnvironment } = require("square");
+const CONFIG = require("../../shop-config.json");
 
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
@@ -20,6 +21,15 @@ exports.handler = async function (event) {
 
   if (!firstName || !lastName || !email || !phone || !itemType || !quantity || !dateNeeded) {
     return { statusCode: 400, body: JSON.stringify({ error: "Missing required fields" }) };
+  }
+
+  // Lead time — server-side backstop (mobile pickers can bypass the client rule)
+  const leadDays = (CONFIG.settings && CONFIG.settings.minLeadDays) || 4;
+  const nowDetroit = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Detroit" }));
+  const minDate = new Date(nowDetroit.getFullYear(), nowDetroit.getMonth(), nowDetroit.getDate() + leadDays);
+  const chosenDate = new Date(dateNeeded + "T00:00:00");
+  if (isNaN(chosenDate) || chosenDate < minDate) {
+    return { statusCode: 400, body: JSON.stringify({ error: `Orders need at least ${leadDays} days' notice. Please pick a later date.` }) };
   }
 
   const client = new SquareClient({
