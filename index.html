@@ -1162,6 +1162,20 @@
       }
     }
 
+    // Lead time check — mobile date pickers don't reliably enforce the min attribute
+    if (SHOP && SHOP.settings) {
+      const lead = SHOP.settings.minLeadDays;
+      const minD = new Date();
+      minD.setHours(0, 0, 0, 0);
+      minD.setDate(minD.getDate() + lead);
+      const chosen = new Date(document.getElementById('dateNeeded').value + 'T00:00:00');
+      if (chosen < minD) {
+        document.getElementById('dateNeeded').focus();
+        showToast("We need at least " + lead + " days' notice — please pick a later date.", true);
+        return;
+      }
+    }
+
     btn.disabled = true;
     btnText.textContent = 'Submitting...';
 
