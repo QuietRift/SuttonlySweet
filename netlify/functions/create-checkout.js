@@ -166,7 +166,13 @@ exports.handler = async function (event) {
     checkoutOptions: {
       redirectUrl: (process.env.URL || "") + "/?order=success",
       askForShippingAddress: false,
-      merchantSupportEmail: process.env.SUPPORT_EMAIL || undefined
+      merchantSupportEmail: process.env.SUPPORT_EMAIL || undefined,
+      acceptedPaymentMethods: {
+        applePay: true,     // shows in Safari on Apple devices only (Apple's rule)
+        googlePay: true,
+        cashAppPay: true,
+        afterpayClearpay: false // flip true only after enrolling in Afterpay in Square Dashboard
+      }
     },
     prePopulatedData: {
       buyerEmail: customer.email,
