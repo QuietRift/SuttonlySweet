@@ -921,10 +921,10 @@
       <span class="logo">Suttonly<span>Sweet</span></span>
       <p>Detroit's sweetest bakery. Everything made fresh, every single day — because shortcuts have no place in good baking.</p>
       <div class="social-links">
-        <a href="https://instagram.com/lovesuttonlysweet" target="_blank" class="social-link" title="Instagram">
+        <a href="https://instagram.com/YOURUSERNAME" target="_blank" class="social-link" title="Instagram">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
         </a>
-        <a href="https://facebook.com/SuttonlySweet" target="_blank" class="social-link" title="Facebook">
+        <a href="https://facebook.com/YOURUSERNAME" target="_blank" class="social-link" title="Facebook">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
         </a>
       </div>
@@ -950,10 +950,10 @@
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="mailto:info@suttonlysweet.com">info@suttonlysweet.com</a></li>
+        <li><a href="mailto:hello@suttonlysweet.com">hello@suttonlysweet.com</a></li>
         <li><a href="#contact">Detroit, MI</a></li>
-        <li><a href="https://instagram.com/lovesuttonlysweet" target="_blank">Instagram</a></li>
-        <li><a href="https://facebook.com/SuttonlySweet" target="_blank">Facebook</a></li>
+        <li><a href="https://instagram.com/YOURUSERNAME" target="_blank">Instagram</a></li>
+        <li><a href="https://facebook.com/YOURUSERNAME" target="_blank">Facebook</a></li>
       </ul>
     </div>
   </div>
@@ -975,7 +975,7 @@
 </form>
 
 <!-- CART -->
-<button class="cart-fab" id="cartFab" onclick="openCart()"> Cart (<span id="cartCount">0</span>)</button>
+<button class="cart-fab" id="cartFab" onclick="openCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
   <div class="cart-head">
@@ -1073,6 +1073,25 @@
 <script>
   // Set min date to tomorrow
   const dateInput = document.getElementById('dateNeeded');
+  // Lead time + allowed days come from shop-config.json (applied when it loads)
+  function applyRequestDateRules() {
+    if (!SHOP) return;
+    const S = SHOP.settings;
+    const min = new Date();
+    min.setDate(min.getDate() + S.minLeadDays);
+    dateInput.min = min.toISOString().split('T')[0];
+    dateInput.addEventListener('change', () => {
+      if (!dateInput.value) return;
+      const chosen = new Date(dateInput.value + 'T00:00:00');
+      const minD = new Date(min.getFullYear(), min.getMonth(), min.getDate());
+      if (chosen < minD) {
+        dateInput.setCustomValidity('Orders need at least ' + S.minLeadDays + " days' notice.");
+        dateInput.reportValidity();
+      } else {
+        dateInput.setCustomValidity('');
+      }
+    });
+  }
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   dateInput.min = tomorrow.toISOString().split('T')[0];
@@ -1198,7 +1217,7 @@ const flavorIdx = {};  // { itemId: current carousel index }
 
 fetch('/shop-config.json')
   .then(r => r.json())
-  .then(cfg => { SHOP = cfg; renderMenu(); initCheckoutUI(); syncRequestDropdown(); })
+  .then(cfg => { SHOP = cfg; renderMenu(); initCheckoutUI(); syncRequestDropdown(); if (typeof applyRequestDateRules === 'function') applyRequestDateRules(); })
   .catch(() => { document.getElementById('menuGrid').innerHTML = '<p style="color:#999">Menu is loading… refresh if this persists.</p>'; });
 
 const fmt = n => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
