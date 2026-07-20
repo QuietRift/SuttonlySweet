@@ -91,8 +91,6 @@ exports.handler = async function (event) {
         : "",
       notes ? `Special Instructions: ${notes}` : "",
       referral ? `How they found us: ${referral}` : "",
-      ``,
-      `⚠️ Update line item price before sending invoice to customer.`
     ].filter(Boolean).join("\n");
 
     // Find or create the customer (new SDK: client.customers, responses are unwrapped)
