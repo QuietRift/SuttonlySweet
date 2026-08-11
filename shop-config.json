@@ -1,12 +1,7 @@
 {
   "settings": {
     "minLeadDays": 4,
-    "allowedPickupWeekdays": [
-      3,
-      4,
-      5,
-      6
-    ],
+    "allowedPickupWeekdays": [3, 4, 5, 6],
     "weekdayKey": "0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat",
     "deliveryFee": 10,
     "deliveryEnabled": true,
@@ -15,27 +10,15 @@
   "items": [
     {
       "id": "pound-cakes",
-      "type": "Pound Cake",
       "name": "Pound Cakes",
       "description": "Layered, decorated, and made to your exact vision. Every occasion deserves something special.",
-      "priceLabel": "Starting at $55",
+      "price": 55,
+      "unit": "cake",
       "emoji": "🎂",
-      "flavors":  [
-        {
-          "id": "lemon",
-          "name": "Lemon",
-          "image": "/images/cupcakes-vanilla.jpg"
-        },
-        {
-          "id": "pineapple",
-          "name": "Pineapple",
-          "image": "/images/cupcakes-chocolate.jpg"
-        },
-        {
-          "id": "vanilla",
-          "name": "Vanilla",
-          "image": "/images/cupcakes-vanilla.jpg"
-        }
+      "flavors": [
+        { "id": "lemon", "name": "Lemon", "image": "/images/cupcakes-vanilla.jpg" },
+        { "id": "pineapple", "name": "Pineapple", "image": "/images/cupcakes-chocolate.jpg" },
+        { "id": "vanilla", "name": "Vanilla", "image": "/images/cupcakes-vanilla.jpg" }
       ]
     },
     {
@@ -46,76 +29,35 @@
       "unit": "dozen",
       "emoji": "🧁",
       "flavors": [
-        {
-          "id": "vanilla",
-          "name": "Vanilla",
-          "image": "/images/cupcakes-vanilla.jpg"
-        },
-        {
-          "id": "chocolate",
-          "name": "Chocolate",
-          "image": "/images/cupcakes-chocolate.jpg"
-        },
-        {
-          "id": "red-velvet",
-          "name": "Red Velvet",
-          "image": "/images/cupcakes-red-velvet.jpg"
-        }
+        { "id": "vanilla", "name": "Vanilla", "image": "/images/cupcakes-vanilla.jpg" },
+        { "id": "chocolate", "name": "Chocolate", "image": "/images/cupcakes-chocolate.jpg" },
+        { "id": "red-velvet", "name": "Red Velvet", "image": "/images/cupcakes-red-velvet.jpg" }
       ]
     },
     {
-      "id": "classic cookies",
+      "id": "classic-cookies",
       "name": "Classic Cookies",
       "description": "Soft-baked, fresh, and absolutely dangerous. Pick your flavor.",
       "price": 24,
       "unit": "dozen",
       "emoji": "🍪",
       "flavors": [
-        {
-          "id": "choc-chip",
-          "name": "Love At First Bite",
-          "flavor": "Chocolate Chip",
-          "image": "/images/cookies-choc-chip.jpg"
-        },
-        {
-          "id": "Sugar",
-          "name": "Sweet On You",
-          "flavor": "Banana Pudding",
-          "image": "/images/cookies-sugar.jpg"
-        },
-        {
-          "id": "lemon",
-          "name": "Pucker Up",
-          "flavor": "Lemon Cookie",
-          "image": "/images/cookies-lemon.jpg"
-        },
-        {
-          "id": "peanut butter",
-          "name": "Snickerdoodle",
-          "image": "/images/cookies-snickerdoodle.jpg"
-        }
+        { "id": "choc-chip", "name": "Love At First Bite", "flavor": "Chocolate Chip", "image": "/images/cookies-choc-chip.jpg" },
+        { "id": "banana-pudding", "name": "Sweet On You", "flavor": "Banana Pudding", "image": "/images/cookies-sugar.jpg" },
+        { "id": "lemon", "name": "Pucker Up", "flavor": "Lemon Cookie", "image": "/images/cookies-lemon.jpg" },
+        { "id": "snickerdoodle", "name": "Snickerdoodle", "image": "/images/cookies-snickerdoodle.jpg" }
       ]
     },
     {
-      "id": "specialty cookies",
+      "id": "specialty-cookies",
       "name": "Specialty Cookies",
       "description": "Fudgy, rich, and made from scratch.",
       "price": 18,
       "unit": "half-dozen",
       "emoji": "🍫",
       "flavors": [
-        {
-          "id": "banana-pudding",
-          "name": "Sweet On You",
-          "flavor": "Banana Pudding Cookie",
-          "image": "/images/brownies-classic.jpg"
-        },
-        {
-          "id": "lemon",
-          "name": "Pucker Up",
-          "flavor": "Lemon Cookie",
-          "image": "/images/brownies-walnut.jpg"
-        }
+        { "id": "banana-pudding", "name": "Sweet On You", "flavor": "Banana Pudding Cookie", "image": "/images/brownies-classic.jpg" },
+        { "id": "lemon", "name": "Pucker Up", "flavor": "Lemon Cookie", "image": "/images/brownies-walnut.jpg" }
       ]
     }
   ],
