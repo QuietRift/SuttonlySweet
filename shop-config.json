@@ -14,16 +14,33 @@
   },
   "items": [
     {
-      "id": "custom-cakes",
-      "type": "custom",
-      "name": "Custom Cakes",
+      "id": "pound-cakes",
+      "type": "Pound Cake",
+      "name": "Pound Cakes",
       "description": "Layered, decorated, and made to your exact vision. Every occasion deserves something special.",
       "priceLabel": "Starting at $55",
-      "emoji": "🎂"
+      "emoji": "🎂",
+      "flavors":  [
+        {
+          "id": "lemon",
+          "name": "Lemon",
+          "image": "/images/cupcakes-vanilla.jpg"
+        },
+        {
+          "id": "pineapple",
+          "name": "Pineapple",
+          "image": "/images/cupcakes-chocolate.jpg"
+        },
+        {
+          "id": "vanilla",
+          "name": "Vanilla",
+          "image": "/images/cupcakes-vanilla.jpg"
+        },
+      ]
     },
     {
-      "id": "cupcakes",
-      "name": "Cupcakes",
+      "id": "flights",
+      "name": "Flights",
       "description": "Dozen minimum. Classic flavors or custom — great for parties, offices, and celebrations.",
       "price": 36,
       "unit": "dozen",
@@ -47,8 +64,8 @@
       ]
     },
     {
-      "id": "cookies",
-      "name": "Cookies",
+      "id": "classic cookies",
+      "name": "Classic Cookies",
       "description": "Soft-baked, fresh, and absolutely dangerous. Pick your flavor.",
       "price": 24,
       "unit": "dozen",
@@ -61,7 +78,7 @@
           "image": "/images/cookies-choc-chip.jpg"
         },
         {
-          "id": "banana-pudding",
+          "id": "Sugar",
           "name": "Sweet On You",
           "flavor": "Banana Pudding",
           "image": "/images/cookies-sugar.jpg"
@@ -73,28 +90,30 @@
           "image": "/images/cookies-lemon.jpg"
         },
         {
-          "id": "snickerdoodle",
+          "id": "peanut butter",
           "name": "Snickerdoodle",
           "image": "/images/cookies-snickerdoodle.jpg"
         }
       ]
     },
     {
-      "id": "brownies",
-      "name": "Brownies",
+      "id": "specialty cookies",
+      "name": "Specialty Cookies",
       "description": "Fudgy, rich, and made from scratch.",
       "price": 18,
       "unit": "half-dozen",
       "emoji": "🍫",
       "flavors": [
         {
-          "id": "classic",
-          "name": "Classic Fudge",
+          "id": "banana-pudding",
+          "name": "Sweet On You",
+          "flavor": "Banana Pudding Cookie",
           "image": "/images/brownies-classic.jpg"
         },
         {
-          "id": "walnut",
-          "name": "Walnut",
+          "id": "lemon",
+          "name": "Pucker Up",
+          "flavor": "Lemon Cookie",
           "image": "/images/brownies-walnut.jpg"
         }
       ]
@@ -102,11 +121,11 @@
   ],
   "events": [
     {
-      "id": "example-event",
-      "name": "Eastern Market Saturday",
-      "location": "Eastern Market, Shed 5, Detroit",
-      "date": "2026-07-25",
-      "hours": "9am-2pm"
+      "id": "griffin-garden",
+      "name": "Griffin Gardens",
+      "location": "Bentler, Shed 5, Detroit",
+      "date": "2026-08-15",
+      "hours": "11am-2pm"
     }
   ]
 }
