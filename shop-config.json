@@ -63,10 +63,6 @@
   ],
   "events": [
     {
-      "id": "select-event",
-      "name": "Select Event...",
-    },
-    {
       "id": "griffin-garden",
       "name": "Griffin Gardens",
       "location": "Bentler, Shed 5, Detroit",
