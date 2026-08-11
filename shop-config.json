@@ -64,7 +64,7 @@
   "events": [
     {
       "id": "select-event",
-      "name": "Select Event",
+      "name": "Select Event...",
     },
     {
       "id": "griffin-garden",
