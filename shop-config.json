@@ -44,7 +44,7 @@
       "flavors": [
         { "id": "choc-chip", "name": "Love At First Bite", "flavor": "Chocolate Chip", "image": "/images/cookies-choc-chip.jpg" },
         { "id": "banana-pudding", "name": "Sweet On You", "flavor": "Banana Pudding", "image": "/images/cookies-sugar.jpg" },
-        { "id": "lemon", "name": "Pucker Up", "flavor": "Lemon Cookie", "image": "/images/cookies-lemon.jpg" },
+        { "id": "lemon", "name": "Pucker Up", "flavor": "Lemon Cookie", "image": "/images/lemon-cookie.jpg" },
         { "id": "snickerdoodle", "name": "Snickerdoodle", "image": "/images/cookies-snickerdoodle.jpg" }
       ]
     },
