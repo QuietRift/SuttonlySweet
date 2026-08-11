@@ -622,6 +622,20 @@
   
     /* ===== CARD CATEGORY HEADER ===== */
     .mc-category { padding: 0.85rem 1.25rem 0.65rem; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink); font-weight: 600; background: white; }
+  
+    /* ===== CUSTOM CALENDAR ===== */
+    .ss-cal { background: white; border: 1.5px solid #e5d0d8; border-radius: 14px; padding: 0.9rem; margin-top: 0.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.08); max-width: 340px; }
+    .ss-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; }
+    .ss-cal-head .ss-cal-title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--green); font-size: 1rem; }
+    .ss-cal-nav { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--pink-light); background: white; color: var(--pink); font-size: 1rem; cursor: pointer; line-height: 1; }
+    .ss-cal-nav:disabled { opacity: 0.3; cursor: default; }
+    .ss-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .ss-cal-dow { text-align: center; font-size: 0.68rem; font-weight: 600; color: #b09aa0; text-transform: uppercase; padding: 0.3rem 0; }
+    .ss-cal-day { aspect-ratio: 1; border: none; background: none; border-radius: 50%; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--dark); cursor: pointer; }
+    .ss-cal-day:hover:not(:disabled) { background: var(--pink-light); }
+    .ss-cal-day:disabled { color: #d8ccc4; cursor: default; text-decoration: line-through; }
+    .ss-cal-day.selected { background: var(--pink); color: white; font-weight: 600; }
+    .ss-cal-note { font-size: 0.72rem; color: #a08a80; text-align: center; margin-top: 0.5rem; }
   </style>
 </head>
 <body>
@@ -780,7 +794,8 @@
           <div class="form-row">
             <div class="form-group">
               <label>Date Needed <span class="req">*</span></label>
-              <input type="date" id="dateNeeded" required />
+              <input type="text" id="dateNeeded" placeholder="Tap to pick a date" readonly required onclick="openCal('dateNeeded')" style="cursor:pointer;background:white" />
+              <div id="cal-dateNeeded" class="ss-cal" style="display:none"></div>
             </div>
             <div class="form-group">
               <label>Occasion</label>
@@ -1041,7 +1056,8 @@
 
     <div class="form-group" id="coDateWrap">
       <label>Pickup / Delivery Date *</label>
-      <input type="date" id="coDate" />
+      <input type="text" id="coDate" placeholder="Tap to pick a date" readonly onclick="openCal('coDate')" style="cursor:pointer;background:white" />
+      <div id="cal-coDate" class="ss-cal" style="display:none"></div>
       <div class="co-hint" id="coDateHint"></div>
     </div>
 
@@ -1548,6 +1564,86 @@ async function startCheckout() {
     showCoError(err.message + ' — try again or use the custom order form below.');
     btn.disabled = false; btn.textContent = 'Continue to Payment';
   }
+}
+
+// ===== CUSTOM CALENDAR (native pickers replaced; bad days are untappable) =====
+const CAL_VIEW = {};
+
+function calRules(inputId) {
+  const S = (SHOP && SHOP.settings) || { minLeadDays: 4 };
+  const min = new Date();
+  min.setHours(0,0,0,0);
+  min.setDate(min.getDate() + (S.minLeadDays || 4));
+  const allowed = (inputId === 'coDate' && Array.isArray(S.allowedPickupWeekdays) && S.allowedPickupWeekdays.length > 0)
+    ? S.allowedPickupWeekdays : null;
+  return { min: min, allowed: allowed, lead: S.minLeadDays || 4 };
+}
+
+function openCal(inputId) {
+  const el = document.getElementById('cal-' + inputId);
+  if (el.style.display !== 'none') { el.style.display = 'none'; return; }
+  const input = document.getElementById(inputId);
+  const rules = calRules(inputId);
+  const start = input.value ? new Date(input.value + 'T00:00:00') : rules.min;
+  CAL_VIEW[inputId] = { y: start.getFullYear(), m: start.getMonth() };
+  renderCal(inputId);
+  el.style.display = 'block';
+}
+
+function calNav(inputId, dir) {
+  const v = CAL_VIEW[inputId];
+  v.m += dir;
+  if (v.m < 0) { v.m = 11; v.y--; }
+  if (v.m > 11) { v.m = 0; v.y++; }
+  renderCal(inputId);
+}
+
+function renderCal(inputId) {
+  const el = document.getElementById('cal-' + inputId);
+  const input = document.getElementById(inputId);
+  const rules = calRules(inputId);
+  const v = CAL_VIEW[inputId];
+  const y = v.y, m = v.m;
+  const monthName = new Date(y, m, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const now = new Date();
+  const atMinMonth = y < now.getFullYear() || (y === now.getFullYear() && m <= now.getMonth());
+
+  const dows = ['S','M','T','W','T','F','S'];
+  const firstDow = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const selected = input.value;
+
+  let cells = dows.map(function(d){ return '<div class="ss-cal-dow">' + d + '</div>'; }).join('');
+  for (let i = 0; i < firstDow; i++) cells += '<div></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(y, m, d);
+    const iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    const disabled = (date < rules.min) || (rules.allowed && !rules.allowed.includes(date.getDay()));
+    const sel = selected === iso ? ' selected' : '';
+    cells += '<button type="button" class="ss-cal-day' + sel + '"' + (disabled ? ' disabled' : '') +
+      ' data-iso="' + iso + '" data-input="' + inputId + '" onclick="pickCalDay(this)">' + d + '</button>';
+  }
+
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const noteBits = [rules.lead + "+ days' notice required"];
+  if (rules.allowed) noteBits.push('Available: ' + rules.allowed.map(function(x){ return dayNames[x]; }).join(', '));
+
+  el.innerHTML =
+    '<div class="ss-cal-head">' +
+      '<button type="button" class="ss-cal-nav" onclick="calNav(\'' + inputId + '\', -1)"' + (atMinMonth ? ' disabled' : '') + '>&#8249;</button>' +
+      '<span class="ss-cal-title">' + monthName + '</span>' +
+      '<button type="button" class="ss-cal-nav" onclick="calNav(\'' + inputId + '\', 1)">&#8250;</button>' +
+    '</div>' +
+    '<div class="ss-cal-grid">' + cells + '</div>' +
+    '<div class="ss-cal-note">' + noteBits.join(' &middot; ') + '</div>';
+}
+
+function pickCalDay(btn) {
+  const inputId = btn.dataset.input;
+  const input = document.getElementById(inputId);
+  input.value = btn.dataset.iso;
+  input.dispatchEvent(new Event('change'));
+  document.getElementById('cal-' + inputId).style.display = 'none';
 }
 
 async function joinLoyalty() {
