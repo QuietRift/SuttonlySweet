@@ -704,7 +704,7 @@
   <div class="section-inner">
     <div class="section-label">Place Your Order</div>
     <div class="section-title">Request a Custom Order</div>
-    <div class="section-sub">Fill out the form below and we'll review your request, then send you a Square invoice to confirm and pay.</div>
+    <div class="section-sub">Fill out the form below and we'll review your request, then send you an invoice to confirm and pay.</div>
 
     <div class="order-grid">
       <!-- Left: How it works -->
@@ -721,7 +721,7 @@
           </li>
           <li>
             <span class="step-num">3</span>
-            <div>Once accepted, we'll send you a Square invoice via email. Pay securely online to confirm your order.</div>
+            <div>Once accepted, we'll send you an invoice via email/text. Pay securely online to confirm your order.</div>
           </li>
           <li>
             <span class="step-num">4</span>
@@ -729,7 +729,7 @@
           </li>
         </ul>
         <div class="order-note">
-          💌 Orders are not confirmed until the invoice is paid. Delivery orders require a $10 flat delivery fee added to your invoice.
+          Orders are not confirmed until the invoice is paid. Delivery orders require a $10 flat delivery fee added to your invoice.
         </div>
       </div>
 
@@ -811,7 +811,7 @@
 
           <!-- Delivery address (hidden until delivery selected) -->
           <div class="delivery-fields" id="deliveryFields">
-            <div class="delivery-fee-note">📦 $10 flat delivery fee will be added to your invoice</div>
+            <div class="delivery-fee-note">$10 flat delivery fee will be added to your invoice</div>
             <div class="form-group">
               <label>Street Address <span class="req">*</span></label>
               <input type="text" id="street" placeholder="123 Main St" />
@@ -864,7 +864,7 @@
         <div class="form-success" id="formSuccess">
           <div class="success-icon">🎉</div>
           <h4>Request Received!</h4>
-          <p>Thanks! We'll review your order and reach out within 24 hours. Once confirmed, you'll receive a Square invoice to your email to complete your order.</p>
+          <p>Thanks! We'll review your order and reach out within 24 hours. Once confirmed, you'll receive an invoice to your email to complete your order.</p>
         </div>
       </div>
     </div>
@@ -965,7 +965,7 @@
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="mailto:hello@suttonlysweet.com">hello@suttonlysweet.com</a></li>
+        <li><a href="mailto:info@suttonlysweet.com">info@suttonlysweet.com</a></li>
         <li><a href="#contact">Detroit, MI</a></li>
         <li><a href="https://instagram.com/lovesuttonlysweet" target="_blank">Instagram</a></li>
         <li><a href="https://facebook.com/SuttonlySweet" target="_blank">Facebook</a></li>
@@ -1568,7 +1568,7 @@ async function joinLoyalty() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Signup failed');
-    showToast("🧁 You're on the list!");
+    showToast("You're on the list!");
     document.getElementById('loyEmail').value = '';
     document.getElementById('loyName').value = '';
   } catch (err) {
@@ -1578,7 +1578,7 @@ async function joinLoyalty() {
 }
 
 if (new URLSearchParams(location.search).get('order') === 'success') {
-  showToast('🎉 Payment received! Check your email for your Square receipt.');
+  showToast('🎉 Payment received! Check your email for your receipt.');
   history.replaceState(null, '', location.pathname);
 }
 </script>
