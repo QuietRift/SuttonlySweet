@@ -1216,6 +1216,11 @@
         showToast("We need at least " + lead + " days' notice — please pick a later date.", true);
         return;
       }
+      if (Array.isArray(SHOP.blockedDates) && SHOP.blockedDates.indexOf(document.getElementById('dateNeeded').value) !== -1) {
+        document.getElementById('dateNeeded').focus();
+        showToast("We're not available on that date — please pick another.", true);
+        return;
+      }
     }
 
     btn.disabled = true;
@@ -1271,7 +1276,7 @@ let SHOP = null;
 const cart = {};       // { "itemId|flavorId": qty }
 const flavorIdx = {};  // { itemId: current carousel index }
 
-fetch('/shop-config.json')
+fetch('/.netlify/functions/get-config')
   .then(r => r.json())
   .then(cfg => { SHOP = cfg; renderMenu(); initCheckoutUI(); syncRequestDropdown(); if (typeof applyRequestDateRules === 'function') applyRequestDateRules(); })
   .catch(() => { document.getElementById('menuGrid').innerHTML = '<p style="color:#999">Menu is loading… refresh if this persists.</p>'; });
@@ -1287,7 +1292,7 @@ function syncRequestDropdown() {
   const first = sel.querySelector('option[value=""]');
   sel.innerHTML = '';
   if (first) sel.appendChild(first);
-  const names = SHOP.items.filter(i => i.type !== 'custom').map(i => i.name);
+  const names = SHOP.items.filter(i => i.type !== 'custom' && !i.soldOut).map(i => i.name);
   ['Custom Cake', ...names, 'Other / Mixed'].forEach(name => {
     const o = document.createElement('option');
     o.textContent = name;
@@ -1297,7 +1302,7 @@ function syncRequestDropdown() {
 
 function renderMenu() {
   const grid = document.getElementById('menuGrid');
-  grid.innerHTML = SHOP.items.map(item => {
+  grid.innerHTML = SHOP.items.filter(i => !i.soldOut).map(item => {
     if (item.type === 'custom') {
       return `
       <div class="menu-card">
@@ -1349,7 +1354,7 @@ function renderMenu() {
     </div>`;
   }).join('');
 
-  SHOP.items.filter(i => i.type !== 'custom').forEach(item => {
+  SHOP.items.filter(i => i.type !== 'custom' && !i.soldOut).forEach(item => {
     if (item.flavors && item.flavors.length > 1) setCarousel(item.id, 0);
     updateCardPrice(item.id);
   });
@@ -1587,7 +1592,8 @@ function calRules(inputId) {
   min.setDate(min.getDate() + (S.minLeadDays || 4));
   const allowed = (inputId === 'coDate' && Array.isArray(S.allowedPickupWeekdays) && S.allowedPickupWeekdays.length > 0)
     ? S.allowedPickupWeekdays : null;
-  return { min: min, allowed: allowed, lead: S.minLeadDays || 4 };
+  const blocked = (SHOP && Array.isArray(SHOP.blockedDates)) ? SHOP.blockedDates : [];
+  return { min: min, allowed: allowed, blocked: blocked, lead: S.minLeadDays || 4 };
 }
 
 function openCal(inputId) {
@@ -1629,7 +1635,7 @@ function renderCal(inputId) {
   for (let d = 1; d <= daysInMonth; d++) {
     const date = new Date(y, m, d);
     const iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-    const disabled = (date < rules.min) || (rules.allowed && !rules.allowed.includes(date.getDay()));
+    const disabled = (date < rules.min) || (rules.allowed && !rules.allowed.includes(date.getDay())) || rules.blocked.indexOf(iso) !== -1;
     const sel = selected === iso ? ' selected' : '';
     cells += '<button type="button" class="ss-cal-day' + sel + '"' + (disabled ? ' disabled' : '') +
       ' data-iso="' + iso + '" data-input="' + inputId + '" onclick="pickCalDay(this)">' + d + '</button>';

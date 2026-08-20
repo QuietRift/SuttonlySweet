@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Suttonly Sweet — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --pink: #F2427A;
+    --pink-light: #FFD6E5;
+    --green: #1A3C34;
+    --green-mid: #2D5E4F;
+    --cream: #FFF8F1;
+    --dark: #1A1A1A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: #333; padding-bottom: 6rem; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--green); }
+
+  header { background: var(--green); color: white; padding: 1.2rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; position: sticky; top: 0; z-index: 50; }
+  header h1 { color: white; font-size: 1.25rem; }
+  header a { color: var(--pink-light); font-size: 0.85rem; text-decoration: none; }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+  .card { background: white; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: 0 3px 16px rgba(0,0,0,0.05); }
+  .card > h2 { font-size: 1.15rem; margin-bottom: 0.35rem; }
+  .card > .hint { font-size: 0.85rem; color: #8a7a70; margin-bottom: 1.1rem; }
+
+  label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--green); margin-bottom: 0.3rem; }
+  input, select, textarea { width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid #e5e0d8; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; background: white; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--pink-light); border-color: var(--pink); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
+  @media (max-width: 620px) { .row, .row-3 { grid-template-columns: 1fr; } }
+
+  button { font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; }
+  .btn { background: var(--pink); color: white; padding: 0.7rem 1.5rem; border-radius: 50px; font-size: 0.92rem; font-weight: 500; }
+  .btn:hover { background: #d63267; }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  .btn-sm { background: var(--green); color: white; padding: 0.45rem 1rem; border-radius: 50px; font-size: 0.82rem; }
+  .btn-ghost { background: none; border: 1.5px solid #ddd; color: #777; padding: 0.5rem 1.1rem; border-radius: 50px; font-size: 0.82rem; }
+  .btn-danger { background: none; border: 1.5px solid #e0b4b4; color: #c0392b; padding: 0.4rem 0.9rem; border-radius: 50px; font-size: 0.78rem; }
+  .btn-danger:hover { background: #fdf0f0; }
+
+  /* Gate */
+  #gate { max-width: 380px; margin: 5rem auto; text-align: center; }
+  #gate .card { padding: 2rem; }
+  #gate h2 { margin-bottom: 0.4rem; }
+  #gate p { font-size: 0.88rem; color: #8a7a70; margin-bottom: 1.4rem; }
+
+  /* Weekday toggles */
+  .dow-row { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .dow { flex: 1; min-width: 44px; padding: 0.6rem 0.2rem; text-align: center; border: 1.5px solid #e5e0d8; border-radius: 10px; font-size: 0.82rem; background: white; color: #999; }
+  .dow.on { background: var(--pink-light); border-color: var(--pink); color: var(--pink); font-weight: 500; }
+
+  /* Calendar */
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; }
+  .cal-title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--green); }
+  .cal-nav { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--pink-light); background: white; color: var(--pink); font-size: 1.05rem; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-dow { text-align: center; font-size: 0.68rem; font-weight: 600; color: #b09aa0; text-transform: uppercase; padding: 0.3rem 0; }
+  .cal-day { aspect-ratio: 1; border-radius: 10px; background: #f7f3ee; color: var(--dark); font-size: 0.85rem; position: relative; }
+  .cal-day.closed { background: #f0ebe5; color: #c8bdb4; text-decoration: line-through; }
+  .cal-day.blocked { background: #c0392b; color: white; font-weight: 600; text-decoration: none; }
+  .cal-day.open:hover { background: var(--pink-light); }
+  .cal-day.event { box-shadow: inset 0 0 0 2px var(--pink); }
+  .cal-day.empty { background: none; }
+  .cal-legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.75rem; color: #8a7a70; margin-top: 0.8rem; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: -1px; margin-right: 4px; }
+
+  /* Lists */
+  .list-item { border: 1.5px solid #eee6de; border-radius: 12px; padding: 1rem; margin-bottom: 0.85rem; }
+  .list-item-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .list-item-head strong { font-size: 0.98rem; color: var(--green); }
+  .flavor-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
+  @media (max-width: 620px) { .flavor-row { grid-template-columns: 1fr 1fr; } }
+  .flavor-row input { padding: 0.5rem 0.7rem; font-size: 0.85rem; }
+  .sub-label { font-size: 0.72rem; color: #a89a90; text-transform: uppercase; letter-spacing: 0.06em; margin: 0.9rem 0 0.4rem; }
+
+  /* Save bar */
+  .savebar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #eee; padding: 0.9rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); z-index: 60; }
+  .savebar .status { font-size: 0.85rem; color: #8a7a70; }
+  .savebar .status.err { color: #c0392b; }
+  .savebar .status.ok { color: var(--green-mid); font-weight: 500; }
+  .errors { background: #fdf0f0; border: 1px solid #e8c4c4; border-radius: 10px; padding: 0.9rem 1.1rem; margin-bottom: 1rem; font-size: 0.85rem; color: #a5352a; display: none; }
+  .errors.show { display: block; }
+  .errors ul { margin: 0.4rem 0 0 1.1rem; }
+</style>
+</head>
+<body>
+
+<!-- PASSCODE GATE -->
+<div id="gate">
+  <div class="card">
+    <h2>Suttonly Sweet</h2>
+    <p>Admin access</p>
+    <input type="password" id="pass" placeholder="Passcode" onkeydown="if(event.key==='Enter')unlock()" />
+    <div style="margin-top:1rem"><button class="btn" onclick="unlock()">Unlock</button></div>
+    <p id="gateErr" style="color:#c0392b;margin-top:0.9rem;display:none"></p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" style="display:none">
+  <header>
+    <h1>Suttonly Sweet — Admin</h1>
+    <a href="/" target="_blank">View site ↗</a>
+  </header>
+
+  <div class="wrap">
+    <div class="errors" id="errors"></div>
+
+    <!-- AVAILABILITY -->
+    <div class="card">
+      <h2>Availability</h2>
+      <p class="hint">Tap any open date to close it (vacation, fully booked). Tap again to reopen. Grayed days are outside your regular pickup days.</p>
+      <div class="cal-head">
+        <button class="cal-nav" onclick="calMove(-1)">&#8249;</button>
+        <span class="cal-title" id="calTitle"></span>
+        <button class="cal-nav" onclick="calMove(1)">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><span class="swatch" style="background:#f7f3ee"></span>Open</span>
+        <span><span class="swatch" style="background:#c0392b"></span>Closed by you</span>
+        <span><span class="swatch" style="background:#f0ebe5"></span>Not a pickup day</span>
+        <span><span class="swatch" style="background:white;box-shadow:inset 0 0 0 2px #F2427A"></span>Event</span>
+      </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="card">
+      <h2>Events</h2>
+      <p class="hint">Pop-ups and markets. These appear as "Event Pickup" at checkout, and skip the lead time and pickup-day rules. Past events hide automatically.</p>
+      <div id="eventList"></div>
+      <button class="btn-sm" onclick="addEvent()">+ Add Event</button>
+    </div>
+
+    <!-- ITEMS -->
+    <div class="card">
+      <h2>Menu Items</h2>
+      <p class="hint">Prices, flavors, and photos. Sold-out items disappear from the site until you switch them back on.</p>
+      <div id="itemList"></div>
+      <button class="btn-sm" onclick="addItem()">+ Add Item</button>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="card">
+      <h2>Order Rules</h2>
+      <p class="hint">Applies to website orders. Event pickups ignore these.</p>
+      <div class="row">
+        <div>
+          <label>Lead time (days)</label>
+          <input type="number" id="setLead" min="0" max="60" />
+        </div>
+        <div>
+          <label>Delivery fee ($)</label>
+          <input type="number" id="setFee" min="0" step="1" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Max quantity per item</label>
+          <input type="number" id="setMaxQty" min="1" max="50" />
+        </div>
+        <div>
+          <label>Delivery offered?</label>
+          <select id="setDelivery">
+            <option value="true">Yes</option>
+            <option value="false">No — pickup only</option>
+          </select>
+        </div>
+      </div>
+      <label style="margin-top:0.5rem">Pickup &amp; delivery days</label>
+      <div class="dow-row" id="dowRow"></div>
+    </div>
+  </div>
+
+  <div class="savebar">
+    <span class="status" id="status">Loaded.</span>
+    <div style="display:flex;gap:0.6rem">
+      <button class="btn-ghost" onclick="location.reload()">Discard</button>
+      <button class="btn" id="saveBtn" onclick="save()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let CFG = null;
+let PASS = '';
+let calY, calM;
+const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// ---------- Gate ----------
+async function unlock() {
+  const val = document.getElementById('pass').value.trim();
+  if (!val) return;
+  PASS = val;
+  const err = document.getElementById('gateErr');
+  err.style.display = 'none';
+  try {
+    const res = await fetch('/.netlify/functions/get-config');
+    CFG = await res.json();
+    if (!CFG.blockedDates) CFG.blockedDates = [];
+    if (!CFG.events) CFG.events = [];
+    // Verify the passcode by attempting a no-change save
+    const check = await fetch('/.netlify/functions/save-config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode: PASS, config: CFG })
+    });
+    if (check.status === 401) {
+      err.textContent = 'Wrong passcode.';
+      err.style.display = 'block';
+      return;
+    }
+    const data = await check.json();
+    if (!check.ok && check.status !== 400) {
+      err.textContent = data.error || 'Could not connect.';
+      err.style.display = 'block';
+      return;
+    }
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('admin').style.display = 'block';
+    const now = new Date();
+    calY = now.getFullYear(); calM = now.getMonth();
+    renderAll();
+  } catch (e) {
+    err.textContent = 'Could not reach the server. Try again.';
+    err.style.display = 'block';
+  }
+}
+
+function renderAll() {
+  renderSettings();
+  renderCal();
+  renderEvents();
+  renderItems();
+}
+
+// ---------- Settings ----------
+function renderSettings() {
+  const S = CFG.settings;
+  document.getElementById('setLead').value = S.minLeadDays;
+  document.getElementById('setFee').value = S.deliveryFee;
+  document.getElementById('setMaxQty').value = S.maxQty || 6;
+  document.getElementById('setDelivery').value = String(S.deliveryEnabled !== false);
+  const row = document.getElementById('dowRow');
+  row.innerHTML = DOW.map((d, i) =>
+    '<button type="button" class="dow' + (S.allowedPickupWeekdays.includes(i) ? ' on' : '') + '" onclick="toggleDow(' + i + ')">' + d + '</button>'
+  ).join('');
+}
+
+function toggleDow(i) {
+  const list = CFG.settings.allowedPickupWeekdays;
+  const at = list.indexOf(i);
+  if (at >= 0) list.splice(at, 1); else list.push(i);
+  list.sort();
+  renderSettings();
+  renderCal();
+  touched();
+}
+
+function pullSettings() {
+  const S = CFG.settings;
+  S.minLeadDays = parseInt(document.getElementById('setLead').value, 10);
+  S.deliveryFee = parseFloat(document.getElementById('setFee').value);
+  S.maxQty = parseInt(document.getElementById('setMaxQty').value, 10);
+  S.deliveryEnabled = document.getElementById('setDelivery').value === 'true';
+}
+
+// ---------- Calendar ----------
+function calMove(dir) {
+  calM += dir;
+  if (calM < 0) { calM = 11; calY--; }
+  if (calM > 11) { calM = 0; calY++; }
+  renderCal();
+}
+
+function renderCal() {
+  document.getElementById('calTitle').textContent =
+    new Date(calY, calM, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const firstDow = new Date(calY, calM, 1).getDay();
+  const days = new Date(calY, calM + 1, 0).getDate();
+  const allowed = CFG.settings.allowedPickupWeekdays || [];
+  const blocked = CFG.blockedDates || [];
+  const eventDates = (CFG.events || []).map(e => e.date);
+
+  let html = ['S','M','T','W','T','F','S'].map(d => '<div class="cal-dow">' + d + '</div>').join('');
+  for (let i = 0; i < firstDow; i++) html += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= days; d++) {
+    const iso = calY + '-' + String(calM + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    const isPickupDay = allowed.includes(new Date(calY, calM, d).getDay());
+    const isBlocked = blocked.includes(iso);
+    const isEvent = eventDates.includes(iso);
+    let cls = 'cal-day ' + (isBlocked ? 'blocked' : (isPickupDay ? 'open' : 'closed'));
+    if (isEvent) cls += ' event';
+    html += '<button type="button" class="' + cls + '" onclick="toggleDate(\'' + iso + '\')">' + d + '</button>';
+  }
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function toggleDate(iso) {
+  const list = CFG.blockedDates;
+  const at = list.indexOf(iso);
+  if (at >= 0) list.splice(at, 1); else list.push(iso);
+  list.sort();
+  renderCal();
+  touched();
+}
+
+// ---------- Events ----------
+function renderEvents() {
+  const wrap = document.getElementById('eventList');
+  if (!CFG.events.length) {
+    wrap.innerHTML = '<p style="color:#a89a90;font-size:0.88rem;margin-bottom:0.9rem">No events yet.</p>';
+    return;
+  }
+  wrap.innerHTML = CFG.events.map((e, i) => `
+    <div class="list-item">
+      <div class="list-item-head">
+        <strong>${e.name || 'New event'}</strong>
+        <button class="btn-danger" onclick="removeEvent(${i})">Remove</button>
+      </div>
+      <div class="row">
+        <div>
+          <label>Event name</label>
+          <input value="${esc(e.name)}" oninput="setEv(${i},'name',this.value)" />
+        </div>
+        <div>
+          <label>Date</label>
+          <input type="date" value="${esc(e.date)}" oninput="setEv(${i},'date',this.value)" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Location</label>
+          <input value="${esc(e.location)}" oninput="setEv(${i},'location',this.value)" />
+        </div>
+        <div>
+          <label>Hours</label>
+          <input value="${esc(e.hours)}" placeholder="11am-2pm" oninput="setEv(${i},'hours',this.value)" />
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function setEv(i, key, val) {
+  CFG.events[i][key] = val;
+  if (key === 'name') CFG.events[i].id = slug(val) || ('event-' + (i + 1));
+  if (key === 'date') renderCal();
+  touched();
+}
+
+function addEvent() {
+  CFG.events.push({ id: 'event-' + (CFG.events.length + 1), name: '', date: '', location: '', hours: '' });
+  renderEvents();
+  touched();
+}
+
+function removeEvent(i) {
+  if (!confirm('Remove this event?')) return;
+  CFG.events.splice(i, 1);
+  renderEvents();
+  renderCal();
+  touched();
+}
+
+// ---------- Items ----------
+function renderItems() {
+  const wrap = document.getElementById('itemList');
+  wrap.innerHTML = CFG.items.map((it, i) => {
+    const isCustom = it.type === 'custom';
+    const flavors = it.flavors || [];
+    return `
+    <div class="list-item">
+      <div class="list-item-head">
+        <strong>${esc(it.name) || 'New item'}</strong>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <label style="margin:0;font-size:0.78rem;display:flex;align-items:center;gap:0.35rem">
+            <input type="checkbox" style="width:auto" ${it.soldOut ? 'checked' : ''} onchange="setItem(${i},'soldOut',this.checked)" /> Sold out
+          </label>
+          <button class="btn-danger" onclick="removeItem(${i})">Remove</button>
+        </div>
+      </div>
+      <div class="row-3">
+        <div>
+          <label>Name</label>
+          <input value="${esc(it.name)}" oninput="setItem(${i},'name',this.value)" />
+        </div>
+        <div>
+          <label>Price ($)${isCustom ? ' — n/a' : ''}</label>
+          <input type="number" step="0.01" min="0" value="${it.price != null ? it.price : ''}" ${isCustom ? 'disabled' : ''} oninput="setItem(${i},'price',parseFloat(this.value))" />
+        </div>
+        <div>
+          <label>Unit</label>
+          <input value="${esc(it.unit)}" placeholder="dozen" oninput="setItem(${i},'unit',this.value)" />
+        </div>
+      </div>
+      <div>
+        <label>Description</label>
+        <textarea rows="2" oninput="setItem(${i},'description',this.value)">${esc(it.description)}</textarea>
+      </div>
+      <div class="sub-label">Flavors</div>
+      ${flavors.map((f, j) => `
+        <div class="flavor-row">
+          <input value="${esc(f.name)}" placeholder="Name (e.g. Pucker Up)" oninput="setFl(${i},${j},'name',this.value)" />
+          <input value="${esc(f.flavor)}" placeholder="What it is (e.g. Lemon)" oninput="setFl(${i},${j},'flavor',this.value)" />
+          <input value="${esc(f.image)}" placeholder="/images/photo.jpg" oninput="setFl(${i},${j},'image',this.value)" />
+          <button class="btn-danger" onclick="removeFl(${i},${j})">✕</button>
+        </div>`).join('')}
+      <button class="btn-ghost" style="margin-top:0.4rem" onclick="addFl(${i})">+ Add Flavor</button>
+    </div>`;
+  }).join('');
+}
+
+function setItem(i, key, val) {
+  CFG.items[i][key] = val;
+  if (key === 'name') CFG.items[i].id = slug(val) || ('item-' + (i + 1));
+  if (key === 'name' || key === 'soldOut') renderItems();
+  touched();
+}
+function setFl(i, j, key, val) {
+  CFG.items[i].flavors[j][key] = val;
+  if (key === 'name') CFG.items[i].flavors[j].id = slug(val) || ('flavor-' + (j + 1));
+  touched();
+}
+function addFl(i) {
+  if (!CFG.items[i].flavors) CFG.items[i].flavors = [];
+  CFG.items[i].flavors.push({ id: 'flavor-' + (CFG.items[i].flavors.length + 1), name: '', flavor: '', image: '' });
+  renderItems();
+  touched();
+}
+function removeFl(i, j) {
+  CFG.items[i].flavors.splice(j, 1);
+  renderItems();
+  touched();
+}
+function addItem() {
+  CFG.items.push({ id: 'item-' + (CFG.items.length + 1), name: '', description: '', price: 0, unit: '', emoji: '🍰', flavors: [] });
+  renderItems();
+  touched();
+}
+function removeItem(i) {
+  if (!confirm('Remove "' + (CFG.items[i].name || 'this item') + '" from the menu?')) return;
+  CFG.items.splice(i, 1);
+  renderItems();
+  touched();
+}
+
+// ---------- Save ----------
+function touched() {
+  const s = document.getElementById('status');
+  s.textContent = 'Unsaved changes';
+  s.className = 'status';
+}
+
+async function save() {
+  pullSettings();
+  const btn = document.getElementById('saveBtn');
+  const s = document.getElementById('status');
+  const errBox = document.getElementById('errors');
+  errBox.classList.remove('show');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  try {
+    const res = await fetch('/.netlify/functions/save-config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode: PASS, config: CFG })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      s.textContent = 'Saved — live on the site now.';
+      s.className = 'status ok';
+    } else {
+      s.textContent = data.error || 'Save failed.';
+      s.className = 'status err';
+      if (data.details && data.details.length) {
+        errBox.innerHTML = '<strong>' + esc(data.error) + '</strong><ul>' +
+          data.details.map(d => '<li>' + esc(d) + '</li>').join('') + '</ul>';
+        errBox.classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  } catch (e) {
+    s.textContent = 'Save failed — check your connection.';
+    s.className = 'status err';
+  }
+  btn.disabled = false; btn.textContent = 'Save Changes';
+}
+
+// ---------- Helpers ----------
+function esc(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function slug(v) {
+  return String(v || '').toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+</script>
+</body>
+</html>
