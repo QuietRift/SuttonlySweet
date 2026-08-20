@@ -6,7 +6,8 @@
     "dev": "netlify dev"
   },
   "dependencies": {
-    "square": "^44.0.0"
+    "square": "^44.0.0",
+    "@netlify/blobs": "^11.0.0"
   },
   "engines": {
     "node": ">=18"
