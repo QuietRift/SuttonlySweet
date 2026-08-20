@@ -1,5 +1,5 @@
 const { SquareClient, SquareEnvironment } = require("square");
-const CONFIG = require("../../shop-config.json");
+const { loadConfig } = require("./_load-config");
 
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
@@ -28,6 +28,7 @@ exports.handler = async function (event) {
     return json(400, { error: "Missing fulfillment details" });
   }
 
+  const CONFIG = await loadConfig();
   const S = CONFIG.settings;
 
   // ---- Resolve fulfillment date + validate rules (server is source of truth) ----
@@ -59,6 +60,11 @@ exports.handler = async function (event) {
       if (!S.allowedPickupWeekdays.includes(chosen.getDay())) {
         return json(400, { error: "That day isn't available for pickup or delivery." });
       }
+    }
+
+    // Dates blocked from the admin page
+    if (Array.isArray(CONFIG.blockedDates) && CONFIG.blockedDates.includes(fulfillDate)) {
+      return json(400, { error: "We're not available on that date — please pick another." });
     }
 
     if (fulfillment.type === "delivery") {

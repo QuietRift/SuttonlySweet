@@ -1,5 +1,5 @@
 const { SquareClient, SquareEnvironment } = require("square");
-const CONFIG = require("../../shop-config.json");
+const { loadConfig } = require("./_load-config");
 
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
@@ -24,12 +24,16 @@ exports.handler = async function (event) {
   }
 
   // Lead time — server-side backstop (mobile pickers can bypass the client rule)
+  const CONFIG = await loadConfig();
   const leadDays = (CONFIG.settings && CONFIG.settings.minLeadDays) || 4;
   const nowDetroit = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Detroit" }));
   const minDate = new Date(nowDetroit.getFullYear(), nowDetroit.getMonth(), nowDetroit.getDate() + leadDays);
   const chosenDate = new Date(dateNeeded + "T00:00:00");
   if (isNaN(chosenDate) || chosenDate < minDate) {
     return { statusCode: 400, body: JSON.stringify({ error: `Orders need at least ${leadDays} days' notice. Please pick a later date.` }) };
+  }
+  if (Array.isArray(CONFIG.blockedDates) && CONFIG.blockedDates.includes(dateNeeded)) {
+    return { statusCode: 400, body: JSON.stringify({ error: "We're not available on that date — please pick another." }) };
   }
 
   const client = new SquareClient({
