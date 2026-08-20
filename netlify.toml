@@ -11,7 +11,3 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
 
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
