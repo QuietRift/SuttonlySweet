@@ -24,7 +24,7 @@ exports.handler = async function (event) {
   }
 
   // Lead time — server-side backstop (mobile pickers can bypass the client rule)
-  const CONFIG = await loadConfig();
+  const CONFIG = await loadConfig(event);
   const leadDays = (CONFIG.settings && CONFIG.settings.minLeadDays) || 4;
   const nowDetroit = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Detroit" }));
   const minDate = new Date(nowDetroit.getFullYear(), nowDetroit.getMonth(), nowDetroit.getDate() + leadDays);

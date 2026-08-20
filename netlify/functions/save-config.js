@@ -1,4 +1,4 @@
-const { getStore } = require("@netlify/blobs");
+const { getStore, connectLambda } = require("@netlify/blobs");
 
 const STORE = "suttonly-config";
 const KEY = "shop-config";
@@ -106,6 +106,8 @@ exports.handler = async function (event) {
 
   // --- Save ---
   try {
+    // Lambda-style functions must connect before Blobs is usable
+    connectLambda(event);
     const store = getStore(STORE);
     await store.setJSON(KEY, config);
     return json(200, { success: true, savedAt: new Date().toISOString() });

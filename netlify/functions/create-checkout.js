@@ -28,7 +28,7 @@ exports.handler = async function (event) {
     return json(400, { error: "Missing fulfillment details" });
   }
 
-  const CONFIG = await loadConfig();
+  const CONFIG = await loadConfig(event);
   const S = CONFIG.settings;
 
   // ---- Resolve fulfillment date + validate rules (server is source of truth) ----
